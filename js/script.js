@@ -24,7 +24,43 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroAnimation();
     init3DEffects();
     initContactForm();
+    initHamburger();
 });
+
+// ========================================
+// HAMBURGER MENU (RESPONSIVE)
+// ========================================
+
+function initHamburger() {
+    const btn = document.getElementById('hamburger-btn');
+    const nav = document.getElementById('main-nav');
+    if (!btn || !nav) return;
+
+    // Toggle open/close
+    btn.addEventListener('click', () => {
+        const isOpen = nav.classList.toggle('nav-open');
+        btn.classList.toggle('is-open', isOpen);
+        btn.setAttribute('aria-expanded', isOpen);
+    });
+
+    // Close when a nav link is clicked
+    nav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            nav.classList.remove('nav-open');
+            btn.classList.remove('is-open');
+            btn.setAttribute('aria-expanded', 'false');
+        });
+    });
+
+    // Reset when resizing above breakpoint
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 1024) {
+            nav.classList.remove('nav-open');
+            btn.classList.remove('is-open');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+    });
+}
 
 // ========================================
 // GESTION DU FORMULAIRE DE CONTACT

@@ -672,30 +672,146 @@ section {
     font-weight: 600;
 }
 
-/* Responsive Design */
-@media (max-width: 992px) {
+/* =========================================
+   HAMBURGER BUTTON (base – hidden on desktop)
+   ========================================= */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    z-index: 1100;
+    order: 3;
+}
+
+.hamburger-bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: var(--text-light);
+    border-radius: 2px;
+    transition: transform 0.35s ease, opacity 0.25s ease, width 0.25s ease;
+    transform-origin: center;
+}
+
+/* Animated X when open */
+.hamburger.is-open .hamburger-bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+.hamburger.is-open .hamburger-bar:nth-child(2) {
+    opacity: 0;
+    width: 0;
+}
+.hamburger.is-open .hamburger-bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* =========================================
+   CONTACT WRAPPER & FORM ROW (moved from inline)
+   ========================================= */
+.contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    text-align: left;
+    align-items: start;
+    margin-top: 40px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+/* =========================================
+   RESPONSIVE – Large tablets (max-width: 1024px)
+   ========================================= */
+@media (max-width: 1024px) {
+    /* Show hamburger, hide desktop nav */
+    .hamburger {
+        display: flex;
+    }
+
     .navbar .container {
+        flex-wrap: wrap;
+        position: relative;
+    }
+
+    /* Mobile nav – hidden by default, slides in */
+    .mobile-nav {
+        display: none;
+        width: 100%;
+        order: 4;
+        background: var(--background-dark);
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease, padding 0.3s ease;
+    }
+
+    .mobile-nav.nav-open {
+        display: block;
+        max-height: 400px;
+        padding: 15px 0 20px;
+    }
+
+    .mobile-nav ul {
         flex-direction: column;
-        gap: 20px;
+        align-items: center;
+        gap: 0;
     }
 
-    .navbar nav ul {
-        justify-content: center;
-        margin-top: 10px;
+    .mobile-nav ul li {
+        margin: 0;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .navbar nav ul li {
-        margin: 0 15px;
+    .mobile-nav ul li:last-child {
+        border-bottom: none;
     }
 
+    .mobile-nav ul li a {
+        display: block;
+        padding: 14px 20px;
+        font-size: 1.05em;
+        border-radius: 0;
+        background: none;
+        border: none;
+        transition: background 0.2s, color 0.2s;
+    }
+
+    .mobile-nav ul li a:hover {
+        background: rgba(0, 128, 255, 0.15);
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* Auth buttons stay visible */
+    .navbar .auth-buttons {
+        order: 2;
+    }
+
+    /* Hero adjustments */
     .hero-content h1 {
-        font-size: 2.8em;
+        font-size: 2.6em;
     }
 
+    .hero-content h2 {
+        font-size: 1.6em;
+    }
+
+    /* Feature grid: 2 columns on tablets */
     .feature-grid {
-        grid-template-columns: 1fr;
-        max-width: 500px;
-        margin: 0 auto;
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 100%;
     }
 
     .feature-item .feature-img {
@@ -719,5 +835,115 @@ section {
     .footer-col {
         width: 100%;
         max-width: 400px;
+    }
+}
+
+/* =========================================
+   RESPONSIVE – Mobile (max-width: 768px)
+   ========================================= */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 18px;
+    }
+
+    section {
+        padding: 60px 0;
+    }
+
+    /* Hero text scaling */
+    .hero-content h1 {
+        font-size: 2em;
+        letter-spacing: 1px;
+    }
+
+    .hero-content h2 {
+        font-size: 1.3em;
+    }
+
+    .hero-content p {
+        font-size: 1em;
+    }
+
+    /* Section titles */
+    .section-title {
+        font-size: 1.9em;
+        margin-bottom: 40px;
+    }
+
+    .cta-section h2 {
+        font-size: 2em;
+    }
+
+    .cta-section p {
+        font-size: 1.1em;
+    }
+
+    /* Feature grid: 1 column */
+    .feature-grid {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    /* Contact section – stacked */
+    .contact-wrapper {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+
+    /* Form row – stacked */
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    /* Footer */
+    .footer {
+        padding: 40px 0 15px;
+    }
+}
+
+/* =========================================
+   RESPONSIVE – Small mobile (max-width: 480px)
+   ========================================= */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 14px;
+    }
+
+    .hero-content h1 {
+        font-size: 1.6em;
+        letter-spacing: 0.5px;
+    }
+
+    .hero-content h2 {
+        font-size: 1.1em;
+    }
+
+    .hero-content p {
+        font-size: 0.95em;
+    }
+
+    .section-title {
+        font-size: 1.6em;
+    }
+
+    .btn {
+        padding: 8px 18px;
+        font-size: 0.9em;
+    }
+
+    .btn-large {
+        padding: 12px 24px;
+        font-size: 1em;
+    }
+
+    /* CTA section */
+    .cta-section h2 {
+        font-size: 1.6em;
+    }
+
+    /* Feature item padding */
+    .feature-item {
+        padding: 20px;
     }
 }
