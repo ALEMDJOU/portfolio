@@ -16,15 +16,25 @@ const CONFIG = {
 // ========================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    initParticles();
+    // Initialisation critique
     initScrollAnimations();
     initSmoothScroll();
-    initNavbarScroll();
-    initParallax();
-    initHeroAnimation();
-    init3DEffects();
-    initContactForm();
     initHamburger();
+
+    // Initialisation différée
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+            initParticles();
+            initNavbarScroll();
+            initParallax();
+        });
+    } else {
+        setTimeout(() => {
+            initParticles();
+            initNavbarScroll();
+            initParallax();
+        }, 2000);
+    }
 });
 
 // ========================================
@@ -196,33 +206,8 @@ function initScrollAnimations() {
 }
 
 // ========================================
-// GESTION DE LA MODALE
+// GESTION DU FORMULAIRE DE CONNEXION
 // ========================================
-
-
-function openModal(modal) {
-    modal.classList.add('show');
-    document.body.style.overflow = 'hidden';
-
-    // Animation des inputs au focus
-    const inputs = modal.querySelectorAll('input');
-    inputs.forEach(input => {
-        input.addEventListener('focus', function () {
-            this.parentElement.classList.add('focused');
-        });
-
-        input.addEventListener('blur', function () {
-            if (!this.value) {
-                this.parentElement.classList.remove('focused');
-            }
-        });
-    });
-}
-
-function closeModal(modal) {
-    modal.classList.remove('show');
-    document.body.style.overflow = '';
-}
 
 function handleLogin(form) {
     const email = form.querySelector('#email').value;
