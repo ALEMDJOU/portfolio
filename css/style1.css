@@ -947,3 +947,66 @@ section {
         padding: 20px;
     }
 }
+
+/* ============================= */
+/* Responsive Design Breakpoints */
+/* ============================= */
+
+/* Petits appareils (mobiles) */
+@media (max-width: 576px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    .navbar nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .navbar nav ul li {
+        margin: 10px 0;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5em;
+    }
+
+    .hero-content p {
+        font-size: 1em;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tablettes */
+@media (min-width: 577px) and (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .navbar nav ul {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .hero-content h1 {
+        font-size: 3em;
+    }
+
+    .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Grands écrans */
+@media (min-width: 769px) {
+    .feature-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .hero-content h1 {
+        font-size: 4em;
+    }
+}
