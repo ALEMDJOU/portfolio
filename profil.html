@@ -21,6 +21,7 @@
             <nav class="mobile-nav" id="main-nav">
                 <ul>
                     <li><a href="profil.html" data-i18n="nav_about">À propos</a></li>
+                    <li><a href="#awards" data-i18n="nav_awards">Distinctions</a></li>
                     <li><a href="index.html#projects" data-i18n="nav_projects">Projets</a></li>
                     <li><a href="index.html#contact" data-i18n="nav_contact">Contact</a></li>
                 </ul>
@@ -60,11 +61,16 @@
                         en compétences pratiques concrètes. Maîtrise des outils fondamentaux (Python, Pandas,
                         Scikit-learn) et expérience acquise sur plusieurs projets fullstack en équipe. Je cherche à
                         contribuer à des projets à fort impact technique et humain.</p>
-                    <div style="margin-top: 20px;">
+                    <div style="margin-top: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
                         <a href="https://github.com/ALEMDJOU" target="_blank" class="btn btn-primary"
                             style="display: inline-flex; align-items: center; gap: 10px;">
                             <i class="fab fa-github" style="font-size: 1.2em;"></i>
                             <span data-i18n="profil_github">Mon profil GitHub</span>
+                        </a>
+                        <a href="#awards" class="btn btn-secondary"
+                            style="display: inline-flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-trophy" style="font-size: 1.2em;"></i>
+                            <span data-i18n="awards_title">Distinctions & Prix</span>
                         </a>
                     </div>
                 </div>
@@ -72,6 +78,54 @@
 
             <div style="text-align: center;">
                 <a href="index.html" class="btn btn-secondary back-btn" data-i18n="btn_back">Retour à l'accueil</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="awards" class="awards-section">
+        <div class="container">
+            <h2 class="section-title-alt" data-i18n="awards_title">Distinctions & Prix</h2>
+            <div class="awards-grid">
+                <div class="award-card animate-on-scroll" data-delay="0">
+                    <img src="images/Hackathon_Indabax.jpg" alt="Hackathon IndabaX 2026" class="award-img">
+                    <div class="award-icon-wrapper">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3 data-i18n="award_1_title">2e Place – Hackathon IndabaX Cameroun 2026</h3>
+                    <p data-i18n="award_1_desc">Avec mon équipe de l'ISSEA (Mark Fankam, Sabine Bodehou et Firmin Peurbar Rimbar), j'ai décroché la 2e place du hackathon IndabaX Cameroun 2026 grâce à AirSentinel, un outil d'intelligence artificielle dédié à l'anticipation des épisodes de pollution atmosphérique.</p>
+                </div>
+                <div class="award-card animate-on-scroll" data-delay="100">
+                    <img src="images/AI_Hackverse.png" alt="AI HackVerse" class="award-img">
+                    <div class="award-icon-wrapper">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 data-i18n="award_2_title">Lauréat – AI HackVerse</h3>
+                    <p data-i18n="award_2_desc">Premier vainqueur de l'édition inaugurale du concours d'intelligence artificielle organisé par le Club Génie Informatique de l'École Nationale Supérieure Polytechnique de Yaoundé (ENSPY).</p>
+                </div>
+                <div class="award-card animate-on-scroll" data-delay="200">
+                    <img src="images/HackathonData4Change.png" alt="Hackathon Data4Change" class="award-img">
+                    <div class="award-icon-wrapper">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 data-i18n="award_3_title">3e Place – Hackathon Data4Change</h3>
+                    <p data-i18n="award_3_desc">Décroché la 3e place du hackathon organisé par le parti politique MPS, portant sur la conception d'un système intelligent de prédiction des prix du transport inter-urbain entre les villes de Yaoundé et Douala.</p>
+                </div>
+                <div class="award-card animate-on-scroll" data-delay="300">
+                    <img src="images/ProjetAFENSPY.jpeg" alt="Concours AFENSPY" class="award-img">
+                    <div class="award-icon-wrapper">
+                        <i class="fas fa-tint"></i>
+                    </div>
+                    <h3 data-i18n="award_4_title">1er Prix – Concours AFENSPY</h3>
+                    <p data-i18n="award_4_desc">Distingué lors de la Semaine de la Fille Scientifique 2025 pour OPAID, un compteur d'eau prépayé intelligent, au concours de projets de l'Association des Filles de l'ENSPY (AFENSPY).</p>
+                </div>
+                <div class="award-card animate-on-scroll" data-delay="400">
+                    <img src="images/ProjetASPY.png" alt="Concours de Projets ASPY" class="award-img">
+                    <div class="award-icon-wrapper">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3 data-i18n="award_5_title">1er Prix – Concours de Projets ASPY</h3>
+                    <p data-i18n="award_5_desc">Le projet OPAID a également remporté le premier prix du concours de projets organisé par l'ASPY, confirmant la pertinence et le potentiel d'impact social de cette innovation.</p>
+                </div>
             </div>
         </div>
     </section>

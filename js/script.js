@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
     initSmoothScroll();
     initHamburger();
+    initContactForm();
+    initBackToTop();
+    initScrollProgress();
 
     // Initialisation différée
     if ('requestIdleCallback' in window) {
@@ -191,6 +194,10 @@ function initScrollAnimations() {
                 const delay = entry.target.dataset.delay || 0;
                 setTimeout(() => {
                     entry.target.classList.add('visible');
+                    // Animer les barres de skills dans cet élément
+                    animateSkillBars(entry.target);
+                    // Animer les compteurs de stats
+                    animateStatCounters(entry.target);
                 }, delay);
             }
         });
@@ -204,6 +211,87 @@ function initScrollAnimations() {
     const sectionTitles = document.querySelectorAll('.section-title');
     sectionTitles.forEach(title => observer.observe(title));
 }
+
+// ========================================
+// ANIMATION DES BARRES DE COMPÉTENCES
+// ========================================
+
+function animateSkillBars(container) {
+    // Si le container est une skills-category, animer ses barres
+    const bars = container.querySelectorAll('.skill-bar-fill');
+    bars.forEach((bar, index) => {
+        const targetWidth = bar.getAttribute('data-width') || 0;
+        const skillItem = bar.closest('.skill-item');
+        setTimeout(() => {
+            bar.style.width = targetWidth + '%';
+            if (skillItem) {
+                skillItem.classList.add('animated');
+            }
+        }, index * 120);
+    });
+}
+
+// ========================================
+// COMPTEURS DE STATISTIQUES ANIMÉS
+// ========================================
+
+function animateStatCounters(container) {
+    const statNumber = container.querySelector('.stat-number[data-target]');
+    if (!statNumber) return;
+
+    const target = parseInt(statNumber.getAttribute('data-target'), 10);
+    const duration = 1200;
+    const step = target / (duration / 16);
+    let current = 0;
+
+    const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+            statNumber.textContent = target + '+';
+            clearInterval(timer);
+        } else {
+            statNumber.textContent = Math.floor(current);
+        }
+    }, 16);
+}
+
+// ========================================
+// BACK TO TOP BUTTON
+// ========================================
+
+function initBackToTop() {
+    const btn = document.getElementById('back-to-top');
+    if (!btn) return;
+
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 500) {
+            btn.classList.add('visible');
+        } else {
+            btn.classList.remove('visible');
+        }
+    }, { passive: true });
+
+    btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+
+// ========================================
+// SCROLL PROGRESS BAR
+// ========================================
+
+function initScrollProgress() {
+    const bar = document.getElementById('scroll-progress');
+    if (!bar) return;
+
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        bar.style.width = progress + '%';
+    }, { passive: true });
+}
+
 
 // ========================================
 // GESTION DU FORMULAIRE DE CONNEXION
