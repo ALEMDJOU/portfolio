@@ -4,39 +4,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#f5f8fc">
+    <script>
+        // Applique le thème avant l'affichage pour éviter un flash de couleurs
+        (function () {
+            var t = null;
+            try { t = localStorage.getItem('portfolio_theme'); } catch (e) { }
+            if (t !== 'light' && t !== 'dark') {
+                t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+    <meta name="description" content="Projets de Fofack Alemdjou Henri Joel : Data Science, IA, génie logiciel et IoT.">
     <title data-i18n="projets_page_title">Tous mes Projets - Fofack Alemdjou Henri Joel</title>
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
     <!-- Preconnect aux domaines externes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <!-- Ajout de preload pour les ressources critiques -->
     <link rel="preload" href="css/style1.css" as="style">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" as="style">
     <!-- Inline critical CSS pour améliorer le LCP -->
     <style>
         :root { --primary-color: #0080ff; --background-light: #F4F6F8; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--background-light); }
+        body { font-family: 'Inter', sans-serif; background-color: var(--background-light); }
     </style>
     <!-- Charger les styles non-critiques en différé -->
     <link rel="stylesheet" href="css/style1.css">
     <link rel="stylesheet" href="css/animations.css" media="print" onload="this.media='all'">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/theme.css">
 </head>
 
-<body style="background-color: var(--background-light);">
+<body>
     <header class="navbar" style="background-color: var(--background-dark); padding: 5px 0;">
         <div class="container">
             <div class="logo">
-                <a href="index.html"><img src="images/logo.png" alt="Logo FAHJ" style="height: 40px; width: auto;"></a>
+                <a href="index.html" class="monogram" aria-label="Henri Joel – Accueil">HJ</a>
             </div>
             <nav class="mobile-nav" id="main-nav">
                 <ul>
                     <li><a href="profil.html" data-i18n="nav_about">À propos</a></li>
                     <li><a href="index.html#projects" data-i18n="nav_projects">Projets</a></li>
+                    <li><a href="index.html#experience" data-i18n="nav_experience">Expériences</a></li>
                     <li><a href="index.html#awards" data-i18n="nav_awards">Distinctions</a></li>
+                    <li><a href="index.html#skills" data-i18n="nav_skills">Compétences</a></li>
+                    <li><a href="index.html#development" data-i18n="nav_research">Recherches</a></li>
                     <li><a href="index.html#contact" data-i18n="nav_contact">Contact</a></li>
+                    <li class="nav-cv-item"><a href="Fofack_Henri_CV.pdf" target="_blank" rel="noopener" data-i18n="btn_cv">Télécharger CV</a></li>
                 </ul>
             </nav>
             <button class="hamburger" id="hamburger-btn" aria-label="Menu" aria-expanded="false">
@@ -44,7 +64,8 @@
                 <span class="hamburger-bar"></span>
                 <span class="hamburger-bar"></span>
             </button>
-            <div class="auth-buttons" style="display:flex; align-items:center;">
+            <div class="auth-buttons" style="display:flex; align-items:center; gap: 10px;">
+                <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Activer le mode sombre"><i class="fas fa-moon"></i></button>
                 <div class="lang-dropdown">
                     <button class="lang-btn" id="current-lang"><img src="https://flagcdn.com/w20/fr.png" alt="FR"
                             width="20" style="margin-right:5px;"> FR ▼</button>
@@ -57,6 +78,7 @@
                                 style="margin-right:10px;"> Deutsch</button>
                     </div>
                 </div>
+                <a href="Fofack_Henri_CV.pdf" target="_blank" class="btn btn-primary" data-i18n="btn_cv" style="padding: 6px 15px; font-size: 0.9em;">Télécharger CV</a>
             </div>
         </div>
     </header>
@@ -64,70 +86,102 @@
     <section id="all-projects" class="features-section" style="padding-top: 100px;">
         <div class="container">
             <h2 class="section-title" data-i18n="all_projects_title">Tous mes Projets Détaillés</h2>
+
+            <!-- ===== DATA SCIENCE & IA ===== -->
+            <h3 class="project-category-title"><i class="fas fa-brain"></i> <span data-i18n="cat_data">Data Science &amp; Intelligence Artificielle</span></h3>
+            <div class="feature-grid">
+
+                <div class="feature-item animate-on-scroll" data-delay="0">
+                    <img src="images/airsentinel.jpg" alt="AirSentinel" class="feature-img" width="258" height="561" loading="lazy" decoding="async">
+                    <h3>AirSentinel</h3>
+                    <p data-i18n="proj_airsentinel" style="text-align: left; font-size: 0.9em;">Prévision de la qualité de l'air à partir des données météorologiques de 42 villes du Cameroun (2024–2026), avec des modèles de gradient boosting (XGBoost et LightGBM) interprétés par SHAP. L'application fournit des prédictions par ville et des conseils de prévention aux populations. 2e place au hackathon IndabaX Cameroun 2026.</p>
+                    <p class="project-role" data-i18n="proj_airsentinel_role"><strong>Mon rôle :</strong> application web et mobile, et API de prédiction et de conseils. La modélisation a été menée par mes coéquipiers statisticiens de l'ISSEA.</p>
+                    <p class="project-stack">XGBoost · LightGBM · SHAP · Next.js · FastAPI</p>
+                    <div class="project-links">
+                        <a href="https://github.com/ALEMDJOU/AirSentinel2" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+                    </div>
+                </div>
+
+                <div class="feature-item animate-on-scroll" data-delay="100">
+                    <img src="images/ava.jpg" alt="Tableau de bord AVA Pro" class="feature-img" width="900" height="409" loading="lazy" decoding="async">
+                    <h3>AVA Pro – Agentic Video Analysis</h3>
+                    <p data-i18n="proj_ava" style="text-align: left; font-size: 0.9em;">Système multi-agents qui évalue une vidéo YouTube à partir de ses commentaires : collecte de 300 commentaires, filtrage du spam, analyse du sentiment et de la valeur pédagogique par des LLM, puis note de qualité sur 10. Bascule automatique entre Gemini, Qwen 2.5 et DeepSeek.</p>
+                    <p class="project-stack">LangGraph · LLM · Streamlit · API YouTube</p>
+                    <div class="project-links">
+                        <a href="https://github.com/ALEMDJOU/Projet3_I3AFD" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+                    </div>
+                </div>
+
+                <div class="feature-item animate-on-scroll" data-delay="200">
+                    <div class="project-visual"><i class="fas fa-layer-group"></i></div>
+                    <h3>LeNet vs ACP – Fashion-MNIST</h3>
+                    <p data-i18n="proj_lenet" style="text-align: left; font-size: 0.9em;">Comparaison de trois approches de classification d'images sur Fashion-MNIST (10 classes) : un CNN LeNet, une ACP suivie d'un réseau dense, et une approche hybride CNN + ACP. Entraînement sur CPU uniquement, évaluation par rapports de classification et matrices de confusion. L'approche LeNet + ACP obtient les meilleurs résultats.</p>
+                    <p class="project-stack">TensorFlow · Scikit-learn · ACP · CNN</p>
+                    <div class="project-links">
+                        <a href="https://github.com/ALEMDJOU/LeNet-ACP" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+                    </div>
+                </div>
+
+                <div class="feature-item animate-on-scroll" data-delay="300">
+                    <div class="project-visual"><i class="fas fa-file-invoice"></i></div>
+                    <h3>Ophélia – Extraction de documents</h3>
+                    <p data-i18n="proj_ophelia" style="text-align: left; font-size: 0.9em;">Module pour l'ERP Dolibarr qui extrait automatiquement les données de factures, RIB ou KBIS. Un microservice Python combine OCR, un modèle d'IA de compréhension de documents et des règles d'extraction ; chaque champ affiche un score de confiance avant validation humaine.</p>
+                    <p class="project-stack">Tesseract OCR · LayoutLMv3 · Python · PHP</p>
+                    <div class="project-links">
+                        <a href="https://github.com/ALEMDJOU/DollPhelia" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ===== GÉNIE LOGICIEL & IOT ===== -->
+            <h3 class="project-category-title"><i class="fas fa-code"></i> <span data-i18n="cat_soft">Génie Logiciel &amp; IoT</span></h3>
             <div class="feature-grid">
 
                 <div class="feature-item animate-on-scroll" data-delay="0">
                     <img src="images/xccm2.jpg" alt="XCCM2" class="feature-img" width="900" height="410" loading="lazy" decoding="async">
                     <h3>XCCM2 - eXtended Content Composition Module</h3>
-                    <p data-i18n="proj_xccm2" style="text-align: justify; font-size: 0.9em;">Dans le cadre de ce projet,
-                        nous avons conçu et développé XCCM2 eXtended Content Composition Module, une application visant
-                        à faciliter la création, l'organisation et la recomposition de contenus pédagogiques à partir de
-                        fragments pré-segmentés appelés granules. Cette approche modulaire permet d’améliorer la
-                        réutilisabilité des contenus, de favoriser le travail collaboratif et d’optimiser le processus
-                        de production des ressources pédagogiques numériques.</p>
-                    <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
-                        <a href="https://xccm-2.vercel.app" target="_blank"
-                            style="color: var(--primary-color); font-weight: bold; text-decoration: none;"><i
-                                class="fas fa-external-link-alt"></i> Démo</a>
-                        <a href="https://github.com/Zenbx/XCCM_2" target="_blank"
-                            style="color: var(--text-dark); font-weight: bold; text-decoration: none;"><i
-                                class="fab fa-github"></i> Front</a>
-                        <a href="https://github.com/Git-Tomson/XCCM2-API" target="_blank"
-                            style="color: var(--text-dark); font-weight: bold; text-decoration: none;"><i
-                                class="fab fa-github"></i> Back</a>
+                    <p data-i18n="proj_xccm2" style="text-align: left; font-size: 0.9em;">Application qui facilite la création, l'organisation et la recomposition de contenus pédagogiques à partir de fragments pré-segmentés appelés granules. Cette approche modulaire rend les contenus réutilisables, favorise le travail collaboratif et accélère la production de ressources pédagogiques numériques.</p>
+                    <p class="project-role" data-i18n="proj_xccm2_role"><strong>Mon rôle :</strong> développement du backend (API).</p>
+                    <div class="project-links">
+                        <a class="demo" href="https://xccm-2.vercel.app" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Démo</a>
+                        <a href="https://github.com/Zenbx/XCCM_2" target="_blank" rel="noopener"><i class="fab fa-github"></i> Front</a>
+                        <a href="https://github.com/Git-Tomson/XCCM2-API" target="_blank" rel="noopener"><i class="fab fa-github"></i> Back</a>
                     </div>
                 </div>
 
                 <div class="feature-item animate-on-scroll" data-delay="100">
                     <div class="project-images-combined">
-                        <img src="images/waterpaid.jpg" alt="Waterpaid App" width="500" height="978" loading="lazy" decoding="async">
-                        <img src="images/cartepcb.jpg" alt="Waterpaid PCB" width="800" height="600" loading="lazy" decoding="async">
+                        <img src="images/waterpaid.jpg" alt="Application OPAID" width="500" height="978" loading="lazy" decoding="async">
+                        <img src="images/cartepcb.jpg" alt="Carte électronique OPAID" width="800" height="600" loading="lazy" decoding="async">
                     </div>
-                    <h3>Waterpaid - Compteur d'Eau Prépayé</h3>
-                    <p data-i18n="proj_waterpaid" style="text-align: justify; font-size: 0.9em;">Compteur d’eau prépayé
-                        intelligent basé sur la technologie LoRaWAN. Ce système intègre une application mobile
-                        permettant aux utilisateurs de gérer leur crédit de manière autonome et aux administrateurs de
-                        superviser l’ensemble des compteurs déployés. Le prototype vise à démontrer la faisabilité
-                        technique et économique d’une telle solution dans le contexte camerounais.</p>
+                    <h3>OPAID - Compteur d'Eau Prépayé</h3>
+                    <p data-i18n="proj_waterpaid" style="text-align: left; font-size: 0.9em;">Compteur d'eau prépayé intelligent basé sur la technologie LoRaWAN, accompagné d'une application mobile : les usagers gèrent leur crédit en autonomie et les administrateurs supervisent l'ensemble des compteurs. Le prototype démontre la faisabilité technique et économique de la solution au Cameroun. 1er prix aux concours AFENSPY et ASPY.</p>
+                    <p class="project-stack">LoRaWAN · Électronique embarquée · Application mobile</p>
                 </div>
 
                 <div class="feature-item animate-on-scroll" data-delay="200">
-                    <img src="images/yowyob.jpg" alt="Yowyob" class="feature-img" width="900" height="389" loading="lazy" decoding="async">
+                    <img src="images/yowyob.jpg" alt="Yowyob Feedback" class="feature-img" width="900" height="389" loading="lazy" decoding="async">
                     <h3>Yowyob Feedback</h3>
-                    <p data-i18n="proj_yowyob" style="text-align: justify; font-size: 0.9em;">Plateforme de prise en
-                        compte des avis et impressions des stagiaires d’une entreprise (basé sur un prototype existant).
-                    </p>
-                    <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
-                        <a href="https://yowyob-feedback-frontend.vercel.app" target="_blank"
-                            style="color: var(--primary-color); font-weight: bold; text-decoration: none;"><i
-                                class="fas fa-external-link-alt"></i> Démo</a>
-                        <a href="https://github.com/ALEMDJOU/yowyob_feedback_frontend" target="_blank"
-                            style="color: var(--text-dark); font-weight: bold; text-decoration: none;"><i
-                                class="fab fa-github"></i> Front</a>
-                        <a href="https://github.com/Git-Tomson/YowYobFeedback_Backend" target="_blank"
-                            style="color: var(--text-dark); font-weight: bold; text-decoration: none;"><i
-                                class="fab fa-github"></i> Back</a>
+                    <p data-i18n="proj_yowyob" style="text-align: left; font-size: 0.9em;">Plateforme permettant aux stagiaires d'une entreprise de partager leurs avis et impressions, construite à partir d'un prototype existant.</p>
+                    <p class="project-role" data-i18n="proj_yowyob_role"><strong>Mon rôle :</strong> développement du frontend.</p>
+                    <p class="project-stack">TypeScript · Next.js</p>
+                    <div class="project-links">
+                        <a class="demo" href="https://yowyob-feedback-frontend.vercel.app" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Démo</a>
+                        <a href="https://github.com/ALEMDJOU/yowyob_feedback_frontend" target="_blank" rel="noopener"><i class="fab fa-github"></i> Front</a>
+                        <a href="https://github.com/Git-Tomson/YowYobFeedback_Backend" target="_blank" rel="noopener"><i class="fab fa-github"></i> Back</a>
                     </div>
                 </div>
 
                 <div class="feature-item animate-on-scroll" data-delay="300">
-                    <img src="images/airsentinel.jpg" alt="AirSentinel" class="feature-img" width="258" height="561" loading="lazy" decoding="async">
-                    <h3>AirSentinel</h3>
-                    <p data-i18n="proj_airsentinel" style="text-align: justify; font-size: 0.9em;">AirSentinel représente une avancée majeure pour la santé publique au Cameroun. Grâce à l'intelligence artificielle, nous pouvons désormais anticiper les épisodes de pollution et protéger les populations les plus vulnérables.</p>
-                    <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
-                        <a href="https://github.com/ALEMDJOU/AirSentinel2" target="_blank"
-                            style="color: var(--text-dark); font-weight: bold; text-decoration: none;"><i
-                                class="fab fa-github"></i> GitHub</a>
+                    <img src="images/assureever.jpg" alt="Page d'accueil AssureEver" class="feature-img" width="900" height="414" loading="lazy" decoding="async">
+                    <h3>AssureEver</h3>
+                    <p data-i18n="proj_assureever" style="text-align: left; font-size: 0.9em;">Plateforme de gestion de la sécurité sociale : inscription des assurés, feuilles de maladie, prescriptions, remboursements et factures PDF, avec des rôles distincts pour assureurs et médecins.</p>
+                    <p class="project-stack">FastAPI · SQLAlchemy · PostgreSQL · Next.js 15</p>
+                    <div class="project-links">
+                        <a class="demo" href="https://assureever-frontend.vercel.app" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Démo</a>
+                        <a href="https://github.com/ALEMDJOU/assureever-frontend" target="_blank" rel="noopener"><i class="fab fa-github"></i> Front</a>
+                        <a href="https://github.com/ALEMDJOU/assureever-api" target="_blank" rel="noopener"><i class="fab fa-github"></i> Back</a>
                     </div>
                 </div>
 
@@ -142,7 +196,7 @@
     <footer class="footer">
         <div class="container">
             <div style="text-align: center; margin-bottom: 20px;">
-                <a href="index.html"><img src="images/logo.png" alt="Logo FAHJ" style="height: 100px; width: auto;" width="400" height="364" loading="lazy" decoding="async"></a>
+                <a href="index.html" class="monogram monogram-lg" aria-label="Henri Joel – Accueil">HJ</a>
             </div>
             <div class="footer-bottom" style="text-align:center;">
                 <p>&copy; 2026 Fofack Alemdjou Henri Joel. <span data-i18n="footer_rights">Tous droits réservés.</span>

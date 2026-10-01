@@ -4,30 +4,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#f5f8fc">
+    <script>
+        // Applique le thème avant l'affichage pour éviter un flash de couleurs
+        (function () {
+            var t = null;
+            try { t = localStorage.getItem('portfolio_theme'); } catch (e) { }
+            if (t !== 'light' && t !== 'dark') {
+                t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+    <meta name="description" content="Profil de Fofack Alemdjou Henri Joel, élève-ingénieur en Génie Informatique à l'ENSPY passionné de Data Science.">
     <title data-i18n="profil_page_title">Mon Profil - Fofack Alemdjou Henri Joel</title>
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preload" href="images/fofack.webp" as="image">
     <link rel="stylesheet" href="css/style1.css">
     <link rel="stylesheet" href="css/animations.css" media="print" onload="this.media='all'">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/theme.css">
 </head>
 
-<body style="background-color: var(--background-light);">
+<body>
     <header class="navbar" style="background-color: var(--background-dark); padding: 5px 0;">
         <div class="container">
             <div class="logo">
-                <a href="index.html"><img src="images/logo.png" alt="Logo FAHJ" style="height: 40px; width: auto;"></a>
+                <a href="index.html" class="monogram" aria-label="Henri Joel – Accueil">HJ</a>
             </div>
             <nav class="mobile-nav" id="main-nav">
                 <ul>
                     <li><a href="profil.html" data-i18n="nav_about">À propos</a></li>
-                    <li><a href="#awards" data-i18n="nav_awards">Distinctions</a></li>
                     <li><a href="index.html#projects" data-i18n="nav_projects">Projets</a></li>
+                    <li><a href="index.html#experience" data-i18n="nav_experience">Expériences</a></li>
+                    <li><a href="index.html#awards" data-i18n="nav_awards">Distinctions</a></li>
+                    <li><a href="index.html#skills" data-i18n="nav_skills">Compétences</a></li>
+                    <li><a href="index.html#development" data-i18n="nav_research">Recherches</a></li>
                     <li><a href="index.html#contact" data-i18n="nav_contact">Contact</a></li>
+                    <li class="nav-cv-item"><a href="Fofack_Henri_CV.pdf" target="_blank" rel="noopener" data-i18n="btn_cv">Télécharger CV</a></li>
                 </ul>
             </nav>
             <button class="hamburger" id="hamburger-btn" aria-label="Menu" aria-expanded="false">
@@ -35,7 +55,8 @@
                 <span class="hamburger-bar"></span>
                 <span class="hamburger-bar"></span>
             </button>
-            <div class="auth-buttons" style="display:flex; align-items:center;">
+            <div class="auth-buttons" style="display:flex; align-items:center; gap: 10px;">
+                <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Activer le mode sombre"><i class="fas fa-moon"></i></button>
                 <div class="lang-dropdown">
                     <button class="lang-btn" id="current-lang"><img src="https://flagcdn.com/w20/fr.png" alt="FR"
                             width="20" style="margin-right:5px;"> FR ▼</button>
@@ -48,6 +69,7 @@
                                 style="margin-right:10px;"> Deutsch</button>
                     </div>
                 </div>
+                <a href="Fofack_Henri_CV.pdf" target="_blank" class="btn btn-primary" data-i18n="btn_cv" style="padding: 6px 15px; font-size: 0.9em;">Télécharger CV</a>
             </div>
         </div>
     </header>
@@ -59,12 +81,7 @@
             <div class="profile-container animate-on-scroll" data-delay="0">
                 <img src="images/fofack.webp" alt="Photo de profil" class="profile-img">
                 <div class="profile-text">
-                    <p data-i18n="profil_desc">Étudiant ingénieur en Génie Informatique à l'ENSPY,
-                        passionné par la Data Science, le Machine Learning et le Deep Learning. Solides bases théoriques
-                        en apprentissage automatique et en réseaux de neurones, que je m'efforce chaque jour de traduire
-                        en compétences pratiques concrètes. Maîtrise des outils fondamentaux (Python, Pandas,
-                        Scikit-learn) et expérience acquise sur plusieurs projets fullstack en équipe. Je cherche à
-                        contribuer à des projets à fort impact technique et humain.</p>
+                    <p data-i18n="profil_desc">Élève-ingénieur en 4e année de Génie Informatique à l'École Nationale Supérieure Polytechnique de Yaoundé (ENSPY). Ma formation généraliste m'a amené à concevoir des applications web, des API et des systèmes IoT ; ma passion est la Data Science et l'intelligence artificielle. Je maîtrise Python, Pandas et Scikit-learn, que j'ai mis en pratique lors d'un stage en Data Science et de plusieurs hackathons primés. Ce double profil me permet d'accompagner un projet de la donnée jusqu'à l'application utilisée au quotidien. Je souhaite contribuer à des projets à fort impact, technique comme humain.</p>
                     <div style="margin-top: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
                         <a href="https://github.com/ALEMDJOU" target="_blank" class="btn btn-primary"
                             style="display: inline-flex; align-items: center; gap: 10px;">
@@ -96,7 +113,7 @@
                         <i class="fas fa-trophy"></i>
                     </div>
                     <h3 data-i18n="award_1_title">2e Place – Hackathon IndabaX Cameroun 2026</h3>
-                    <p data-i18n="award_1_desc">Avec mon équipe de l'ISSEA (Mark Fankam, Sabine Bodehou et Firmin Peurbar Rimbar), j'ai décroché la 2e place du hackathon IndabaX Cameroun 2026 grâce à AirSentinel, un outil d'intelligence artificielle dédié à l'anticipation des épisodes de pollution atmosphérique.</p>
+                    <p data-i18n="award_1_desc">Au sein d'une équipe mixte ISSEA–ENSPY (Mark Fankam, Sabine Bodehou et Firmin Peurbar Rimbar), 2e place du hackathon IndabaX Cameroun 2026 avec AirSentinel, un outil d'IA qui anticipe les épisodes de pollution atmosphérique. J'y ai développé l'application web et mobile ainsi que l'API de prédiction.</p>
                 </div>
                 <div class="award-card animate-on-scroll" data-delay="100">
                     <img src="images/AI_Hackverse.jpg" alt="AI HackVerse" class="award-img" width="800" height="561" loading="lazy" decoding="async">
@@ -112,7 +129,7 @@
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <h3 data-i18n="award_3_title">3e Place – Hackathon Data4Change</h3>
-                    <p data-i18n="award_3_desc">Décroché la 3e place du hackathon organisé par le parti politique MPS, portant sur la conception d'un système intelligent de prédiction des prix du transport inter-urbain entre les villes de Yaoundé et Douala.</p>
+                    <p data-i18n="award_3_desc">3e place d'un hackathon consacré à la conception d'un système intelligent de prédiction des prix du transport interurbain entre Yaoundé et Douala.</p>
                 </div>
                 <div class="award-card animate-on-scroll" data-delay="300">
                     <img src="images/ProjetAFENSPY.jpeg" alt="Concours AFENSPY" class="award-img" width="800" height="600" loading="lazy" decoding="async">
@@ -136,7 +153,7 @@
                         <i class="fas fa-chart-pie"></i>
                     </div>
                     <h3 data-i18n="award_6_title">1er Prix – Statisticien de l'Année 2025 (Licence)</h3>
-                    <p data-i18n="award_6_desc">Désigné Premier Statisticien de l'Année 2025 (niveau Licence) lors du concours organisé par le groupe Statosphère de l'ISSEA.</p>
+                    <p data-i18n="award_6_desc">Désigné Premier Statisticien de l'Année 2025 (niveau Licence) lors du concours organisé par le groupe Statosphère de l'ISSEA, ouvert également aux étudiants de 3e année des filières scientifiques.</p>
                 </div>
             </div>
         </div>
@@ -145,7 +162,7 @@
     <footer class="footer">
         <div class="container">
             <div style="text-align: center; margin-bottom: 20px;">
-                <a href="index.html"><img src="images/logo.png" alt="Logo FAHJ" style="height: 100px; width: auto;" width="400" height="364" loading="lazy" decoding="async"></a>
+                <a href="index.html" class="monogram monogram-lg" aria-label="Henri Joel – Accueil">HJ</a>
             </div>
             <div class="footer-bottom" style="text-align:center;">
                 <p>&copy; 2026 Fofack Alemdjou Henri Joel. <span data-i18n="footer_rights">Tous droits réservés.</span>

@@ -1,12 +1,11 @@
 // ========================================
-// YOWYOB FEEDBACK - ANIMATIONS MODERNES
+// PORTFOLIO - SCRIPTS & ANIMATIONS
 // ========================================
 
 'use strict';
 
 // Configuration
 const CONFIG = {
-    particleCount: 80,
     scrollThreshold: 0.15,
     animationDelay: 150
 };
@@ -23,19 +22,17 @@ document.addEventListener('DOMContentLoaded', () => {
     initContactForm();
     initBackToTop();
     initScrollProgress();
+    initThemeToggle();
+    initHeroGrid();
 
     // Initialisation différée
     if ('requestIdleCallback' in window) {
         requestIdleCallback(() => {
-            initParticles();
             initNavbarScroll();
-            initParallax();
         });
     } else {
         setTimeout(() => {
-            initParticles();
             initNavbarScroll();
-            initParallax();
         }, 2000);
     }
 });
@@ -140,41 +137,167 @@ function initContactForm() {
 }
 
 // ========================================
-// SYSTÈME DE PARTICULES
+// MODE CLAIR / SOMBRE
 // ========================================
 
-function initParticles() {
-    const particlesContainer = document.getElementById('particles');
-    if (!particlesContainer) return;
+function initThemeToggle() {
+    const btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    const root = document.documentElement;
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
 
-    for (let i = 0; i < CONFIG.particleCount; i++) {
-        createParticle(particlesContainer);
-    }
+    const sync = () => {
+        const dark = root.getAttribute('data-theme') === 'dark';
+        btn.innerHTML = dark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        btn.setAttribute('aria-label', dark ? 'Activer le mode clair' : 'Activer le mode sombre');
+        btn.setAttribute('aria-pressed', String(dark));
+        if (metaTheme) metaTheme.setAttribute('content', dark ? '#08111e' : '#f5f8fc');
+    };
+
+    btn.addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('portfolio_theme', next); } catch (e) { /* stockage indisponible */ }
+        sync();
+    });
+
+    // Suivre le réglage du système tant que l'utilisateur n'a pas choisi lui-même
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const onSystemChange = (e) => {
+        let saved = null;
+        try { saved = localStorage.getItem('portfolio_theme'); } catch (err) { /* ignore */ }
+        if (saved) return;
+        root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+        sync();
+    };
+    if (media.addEventListener) media.addEventListener('change', onSystemChange);
+
+    sync();
 }
 
-function createParticle(container) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
+// ========================================
+// CARREAUX ANIMÉS AUTOUR DU NOM (HERO)
+// ========================================
 
-    // Position aléatoire
-    const startX = Math.random() * 100;
-    const drift = (Math.random() - 0.5) * 100;
-    const duration = 10 + Math.random() * 20;
-    const delay = Math.random() * 5;
-    const size = 2 + Math.random() * 4;
+function initHeroGrid() {
+    const canvas = document.getElementById('hero-grid');
+    const hero = canvas ? canvas.closest('.hero-section') : null;
+    const name = document.getElementById('hero-name');
+    if (!canvas || !hero || !name) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    particle.style.left = `${startX}%`;
-    particle.style.width = `${size}px`;
-    particle.style.height = `${size}px`;
-    particle.style.animationDuration = `${duration}s`;
-    particle.style.animationDelay = `${delay}s`;
-    particle.style.setProperty('--drift', `${drift}px`);
+    const ctx = canvas.getContext('2d');
+    const CELL = 28; // doit correspondre au motif CSS (28px)
+    const cells = [];
+    let maxCells = 14;
+    let zone = null;
+    let running = false;
+    let lastSpawn = 0;
+    let frame = 0;
+    let inView = true;
 
-    container.appendChild(particle);
+    function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const w = hero.clientWidth;
+        const h = hero.clientHeight;
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // Régénérer la particule après l'animation
-    particle.addEventListener('animationiteration', () => {
-        particle.style.left = `${Math.random() * 100}%`;
+        // Zone en ellipse autour du nom, exprimée en cellules
+        const heroRect = hero.getBoundingClientRect();
+        const r = name.getBoundingClientRect();
+        const margin = w < 600 ? 2 : 4;
+        // Rectangles de texte à ne jamais recouvrir (nom, accroche, sous-titre)
+        const texts = [name, ...hero.querySelectorAll('.hero-content h2, .hero-content p')].map(el => {
+            const t = el.getBoundingClientRect();
+            return { left: t.left - heroRect.left - 4, right: t.right - heroRect.left + 4, top: t.top - heroRect.top - 4, bottom: t.bottom - heroRect.top + 4 };
+        });
+        zone = {
+            cx: r.left - heroRect.left + r.width / 2,
+            cy: r.top - heroRect.top + r.height / 2,
+            rx: r.width / 2 + CELL * margin,
+            ry: r.height / 2 + CELL * (margin + 1),
+            texts
+        };
+        maxCells = w < 600 ? 7 : 14;
+    }
+
+    function spawn(now) {
+        for (let attempt = 0; attempt < 20; attempt++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.sqrt(Math.random());
+            const x = zone.cx + Math.cos(angle) * zone.rx * dist;
+            const y = zone.cy + Math.sin(angle) * zone.ry * dist;
+            const col = Math.floor(x / CELL);
+            const row = Math.floor(y / CELL);
+            const px = col * CELL;
+            const py = row * CELL;
+
+            // Les cellules entourent le nom sans passer sous les lettres
+            const overName = zone.texts.some(n => px + CELL > n.left && px < n.right && py + CELL > n.top && py < n.bottom);
+            const taken = cells.some(c => c.col === col && c.row === row);
+            if (overName || taken || px < 0 || py < 0) continue;
+
+            cells.push({ col, row, born: now, life: 2400 + Math.random() * 1800, peak: 0.55 + Math.random() * 0.45 });
+            return;
+        }
+    }
+
+    function draw(now) {
+        if (!running) return;
+        frame = requestAnimationFrame(draw);
+
+        if (cells.length < maxCells && now - lastSpawn > 260) {
+            spawn(now);
+            lastSpawn = now;
+        }
+
+        const alphaMax = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--t-cell-alpha')) || 0.2;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = cells.length - 1; i >= 0; i--) {
+            const c = cells[i];
+            const t = (now - c.born) / c.life;
+            if (t >= 1) {
+                cells.splice(i, 1);
+                continue;
+            }
+            const a = Math.sin(Math.PI * t) * c.peak * alphaMax;
+            const x = c.col * CELL + 1;
+            const y = c.row * CELL + 1;
+            ctx.fillStyle = 'rgba(0, 128, 255, ' + a.toFixed(3) + ')';
+            ctx.fillRect(x, y, CELL - 1, CELL - 1);
+            ctx.strokeStyle = 'rgba(0, 128, 255, ' + Math.min(a * 2, 0.6).toFixed(3) + ')';
+            ctx.strokeRect(x - 0.5, y - 0.5, CELL, CELL);
+        }
+    }
+
+    function start() {
+        if (running) return;
+        running = true;
+        frame = requestAnimationFrame(draw);
+    }
+
+    function stop() {
+        running = false;
+        cancelAnimationFrame(frame);
+    }
+
+    resize();
+    window.addEventListener('resize', debounce(resize, 150));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(resize);
+    // Recalcule après l'animation d'entrée du nom
+    setTimeout(resize, 900);
+
+    // Pause quand le hero n'est plus visible ou que l'onglet est masqué
+    new IntersectionObserver(entries => {
+        inView = entries[0].isIntersecting;
+        inView ? start() : stop();
+    }).observe(hero);
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop();
+        else if (inView) start();
     });
 }
 
@@ -247,7 +370,7 @@ function animateStatCounters(container) {
     const timer = setInterval(() => {
         current += step;
         if (current >= target) {
-            statNumber.textContent = target + '+';
+            statNumber.textContent = target + (statNumber.hasAttribute('data-plus') ? '+' : '');
             clearInterval(timer);
         } else {
             statNumber.textContent = Math.floor(current);
@@ -292,32 +415,6 @@ function initScrollProgress() {
     }, { passive: true });
 }
 
-
-// ========================================
-// GESTION DU FORMULAIRE DE CONNEXION
-// ========================================
-
-function handleLogin(form) {
-    const email = form.querySelector('#email').value;
-    const password = form.querySelector('#password').value;
-
-    // Animation de chargement
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="loading-spinner"></span> Connexion...';
-
-    // Simuler une requête (remplacer par votre logique)
-    setTimeout(() => {
-        console.log('Login attempt:', { email, password });
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-
-        // Afficher un message de succès
-        showNotification('Connexion réussie !', 'success');
-        closeModal(document.getElementById('loginModal'));
-    }, 1500);
-}
 
 // ========================================
 // SMOOTH SCROLL
@@ -377,31 +474,6 @@ function initNavbarScroll() {
 
     // Transition smooth pour la navbar
     navbar.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
-}
-
-// ========================================
-// EFFET PARALLAXE
-// ========================================
-
-function initParallax() {
-    if (window.innerWidth < 768) return; // Désactiver sur mobile
-
-    const parallaxElements = document.querySelectorAll('.feature-item, .step-item, .testimonial-item');
-
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-
-        parallaxElements.forEach(el => {
-            const rect = el.getBoundingClientRect();
-            const centerY = rect.top + rect.height / 2;
-            const viewportCenter = window.innerHeight / 2;
-            const distance = (centerY - viewportCenter) / 50;
-
-            if (rect.top < window.innerHeight && rect.bottom > 0) {
-                el.style.transform = `translateY(${distance}px)`;
-            }
-        });
-    });
 }
 
 // ========================================
@@ -633,77 +705,3 @@ function throttle(func, limit = 100) {
         }
     };
 }
-
-// ========================================
-// EASTER EGG (optionnel)
-// ========================================
-
-let clickCount = 0;
-document.querySelector('.footer-logo')?.addEventListener('click', () => {
-    clickCount++;
-    if (clickCount >= 5) {
-        createConfetti();
-        showNotification('🎉 Vous avez trouvé l\'easter egg !', 'success');
-        clickCount = 0;
-    }
-});
-
-function createConfetti() {
-    const colors = ['#6A1B9A', '#8E24AA', '#AB47BC', '#CE93D8'];
-    const confettiCount = 100;
-
-    for (let i = 0; i < confettiCount; i++) {
-        const confetti = document.createElement('div');
-        confetti.style.cssText = `
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            background: ${colors[Math.floor(Math.random() * colors.length)]};
-            left: ${Math.random() * 100}%;
-            top: -10px;
-            opacity: 1;
-            transform: rotate(${Math.random() * 360}deg);
-            pointer-events: none;
-            z-index: 10001;
-        `;
-
-        document.body.appendChild(confetti);
-
-        const animation = confetti.animate([
-            { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
-            { transform: `translateY(${window.innerHeight + 100}px) rotate(${720 + Math.random() * 360}deg)`, opacity: 0 }
-        ], {
-            duration: 3000 + Math.random() * 2000,
-            easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-        });
-
-        animation.onfinish = () => confetti.remove();
-    }
-}
-
-// ========================================
-// EXPORT (si module ES6)
-// ========================================
-// ... (à l'intérieur de la fonction initModal, cherchez le formulaire) ...
-
-// Gestionnaire de soumission du formulaire de connexion
-const loginForm = document.getElementById('loginForm');
-if (loginForm) {
-    loginForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        // Simuler la connexion et la redirection
-        showNotification('Connexion réussie ! Redirection...', 'success');
-
-        // Masquer la modale
-        loginModal.classList.remove('show');
-
-        // Redirection vers le tableau de bord après un court délai
-        setTimeout(() => {
-            window.location.href = 'dashboard.html'; // C'est ici que la redirection se fait
-        }, 1500); // Délai de 1.5 secondes pour que l'utilisateur lise la notification
-    });
-}
-
-// ... (le reste du fichier script.js) ...
-// export { showNotification, animateCounter, debounce, throttle };

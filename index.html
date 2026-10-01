@@ -4,27 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfolio de Fofack Alemdjou Henri Joel - Ingénieur Informatique spécialisé en Data Science, Machine Learning et Deep Learning. Découvrez mes projets et mon parcours.">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#f5f8fc">
+    <script>
+        // Applique le thème avant l'affichage pour éviter un flash de couleurs
+        (function () {
+            var t = null;
+            try { t = localStorage.getItem('portfolio_theme'); } catch (e) { }
+            if (t !== 'light' && t !== 'dark') {
+                t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+    <meta name="description" content="Portfolio de Fofack Alemdjou Henri Joel - Élève-ingénieur en Génie Informatique à l'ENSPY, passionné de Data Science et d'Intelligence Artificielle. Découvrez mes projets et mon parcours.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Fofack Alemdjou Henri Joel - Portfolio">
+    <meta property="og:description" content="Élève-ingénieur en Génie Informatique (ENSPY) · Data Science & IA · 6 distinctions en hackathons et concours.">
+    <meta property="og:url" content="https://portfoliofofackhenri.vercel.app/">
+    <meta property="og:image" content="https://portfoliofofackhenri.vercel.app/images/fofack-og.jpg">
     <title data-i18n="page_title">Portfolio - Fofack Alemdjou Henri Joel</title>
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
     <!-- Preconnect aux domaines externes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <!-- Preload ressources critiques -->
     <link rel="preload" href="css/style1.css" as="style">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" as="style">
-    <link rel="preload" href="images/fofack.webp" as="image">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" as="style">
     <!-- Inline critical CSS -->
     <style>
         :root { --primary-color: #0080ff; --background-light: #F4F6F8; }
-        body { font-family: 'Montserrat', sans-serif; background-color: var(--background-light); }
+        body { font-family: 'Inter', sans-serif; background-color: var(--background-light); }
     </style>
     <!-- Styles -->
     <link rel="stylesheet" href="css/style1.css">
     <link rel="stylesheet" href="css/animations.css" media="print" onload="this.media='all'">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/theme.css">
 </head>
 
 <body>
@@ -37,7 +56,7 @@
     <header class="navbar" style="background-color: var(--background-dark); padding: 5px 0;">
         <div class="container">
             <div class="logo">
-                <a href="index.html"><img src="images/logo.png" alt="Logo FAHJ" style="height: 40px; width: auto;"></a>
+                <a href="index.html" class="monogram" aria-label="Henri Joel – Accueil">HJ</a>
             </div>
             <nav class="mobile-nav" id="main-nav">
                 <ul>
@@ -48,6 +67,7 @@
                     <li><a href="#skills" data-i18n="nav_skills">Compétences</a></li>
                     <li><a href="#development" data-i18n="nav_research">Recherches</a></li>
                     <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+                    <li class="nav-cv-item"><a href="Fofack_Henri_CV.pdf" target="_blank" rel="noopener" data-i18n="btn_cv">Télécharger CV</a></li>
                 </ul>
             </nav>
             <button class="hamburger" id="hamburger-btn" aria-label="Menu" aria-expanded="false">
@@ -55,7 +75,8 @@
                 <span class="hamburger-bar"></span>
                 <span class="hamburger-bar"></span>
             </button>
-            <div class="auth-buttons" style="display:flex; align-items:center;">
+            <div class="auth-buttons" style="display:flex; align-items:center; gap: 10px;">
+                <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Activer le mode sombre"><i class="fas fa-moon"></i></button>
                 <div class="lang-dropdown">
                     <button class="lang-btn" id="current-lang"><img src="https://flagcdn.com/w20/fr.png" alt="FR"
                             width="20" style="margin-right:5px;"> FR ▼</button>
@@ -68,27 +89,20 @@
                                 style="margin-right:10px;"> Deutsch</button>
                     </div>
                 </div>
-                <a href="Fofack_Henri_CV.pdf" target="_blank" class="btn btn-primary" data-i18n="btn_cv"
-                    style="margin-left: 20px; padding: 6px 15px; font-size: 0.9em;">Télécharger CV</a>
+                <a href="Fofack_Henri_CV.pdf" target="_blank" class="btn btn-primary" data-i18n="btn_cv" style="padding: 6px 15px; font-size: 0.9em;">Télécharger CV</a>
             </div>
         </div>
     </header>
 
     <section id="about" class="hero-section">
+        <canvas class="hero-grid-canvas" id="hero-grid" aria-hidden="true"></canvas>
         <div class="container">
-            <div class="hero-content fade-in-up" style="text-align: center; width: 100%; margin-top: 15vh;">
-                <h1 class="text-reveal"
-                    style="opacity: 1 !important; visibility: visible !important; text-shadow: 2px 2px 8px rgba(0,0,0,0.6); font-size: 4em;">
-                    FOFACK ALEMDJOU HENRI JOEL</h1>
-                <h2 class="fade-in-up delay-1 sparkle-text" data-i18n="hero_desc"
-                    style="font-size: 2.2em; font-weight: 700; margin-bottom: 20px;">
-                    Ingénieur et Développeur passionné par l'innovation technique.</h2>
-                <p class="fade-in-up delay-2 sparkle-text" data-i18n="hero_sub"
-                    style="font-size: 1.5em; font-weight: 600;">
-                    Découvrez mes projets et parcours professionnel.</p>
+            <div class="hero-content fade-in-up">
+                <h1 class="text-reveal" id="hero-name">FOFACK ALEMDJOU HENRI JOEL</h1>
+                <h2 class="fade-in-up delay-1 sparkle-text" data-i18n="hero_desc">Élève-ingénieur en Génie Informatique à l'ENSPY</h2>
+                <p class="fade-in-up delay-2 sparkle-text" data-i18n="hero_sub">Formation généraliste · Passionné de Data Science &amp; d'Intelligence Artificielle</p>
             </div>
         </div>
-        <div class="particles" id="particles"></div>
         <!-- Scroll Down Indicator -->
         <a href="#projects" class="scroll-indicator" aria-label="Défiler vers le bas">
             <i class="fas fa-chevron-down"></i>
@@ -101,68 +115,43 @@
             <div class="feature-grid">
 
                 <div class="feature-item animate-on-scroll" data-delay="0">
-                    <img src="images/xccm2.jpg" alt="XCCM2" class="feature-img" width="900" height="410" loading="lazy" decoding="async">
-                    <h3>XCCM2</h3>
-                    <p data-i18n="proj_xccm2" style="text-align: justify; font-size: 0.9em;">Dans le cadre de ce projet,
-                        nous avons conçu et développé XCCM2 eXtended Content Composition Module, une application visant
-                        à faciliter la création, l'organisation et la recomposition de contenus pédagogiques à partir de
-                        fragments pré-segmentés appelés granules. Cette approche modulaire permet d’améliorer la
-                        réutilisabilité des contenus, de favoriser le travail collaboratif et d’optimiser le processus
-                        de production des ressources pédagogiques numériques.</p>
-                    <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
-                        <a href="https://xccm-2.vercel.app" target="_blank"
-                            style="color: var(--primary-color); font-weight: bold; text-decoration: none;"><i
-                                class="fas fa-external-link-alt"></i> Démo</a>
-                        <a href="https://github.com/Zenbx/XCCM_2" target="_blank"
-                            style="color: var(--text-dark); font-weight: bold; text-decoration: none;"><i
-                                class="fab fa-github"></i> Front</a>
-                        <a href="https://github.com/Git-Tomson/XCCM2-API" target="_blank"
-                            style="color: var(--text-dark); font-weight: bold; text-decoration: none;"><i
-                                class="fab fa-github"></i> Back</a>
+                    <img src="images/airsentinel.jpg" alt="AirSentinel" class="feature-img" width="258" height="561" loading="lazy" decoding="async">
+                    <h3>AirSentinel</h3>
+                    <p data-i18n="proj_airsentinel" style="text-align: left; font-size: 0.9em;">Prévision de la qualité de l'air à partir des données météorologiques de 42 villes du Cameroun (2024–2026), avec des modèles de gradient boosting (XGBoost et LightGBM) interprétés par SHAP. L'application fournit des prédictions par ville et des conseils de prévention aux populations. 2e place au hackathon IndabaX Cameroun 2026.</p>
+                    <p class="project-role" data-i18n="proj_airsentinel_role"><strong>Mon rôle :</strong> application web et mobile, et API de prédiction et de conseils. La modélisation a été menée par mes coéquipiers statisticiens de l'ISSEA.</p>
+                    <div class="project-links">
+                        <a href="https://github.com/ALEMDJOU/AirSentinel2" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
                     </div>
                 </div>
 
                 <div class="feature-item animate-on-scroll" data-delay="100">
-                    <div class="project-images-combined">
-                        <img src="images/waterpaid.jpg" alt="Waterpaid App" width="500" height="978" loading="lazy" decoding="async">
-                        <img src="images/cartepcb.jpg" alt="Waterpaid PCB" width="800" height="600" loading="lazy" decoding="async">
+                    <img src="images/ava.jpg" alt="Tableau de bord AVA Pro" class="feature-img" width="900" height="409" loading="lazy" decoding="async">
+                    <h3>AVA Pro – Agentic Video Analysis</h3>
+                    <p data-i18n="proj_ava" style="text-align: left; font-size: 0.9em;">Système multi-agents qui évalue une vidéo YouTube à partir de ses commentaires : collecte de 300 commentaires, filtrage du spam, analyse du sentiment et de la valeur pédagogique par des LLM, puis note de qualité sur 10. Bascule automatique entre Gemini, Qwen 2.5 et DeepSeek.</p>
+                    <div class="project-links">
+                        <a href="https://github.com/ALEMDJOU/Projet3_I3AFD" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
                     </div>
-                    <h3>Waterpaid</h3>
-                    <p data-i18n="proj_waterpaid" style="text-align: justify; font-size: 0.9em;">Compteur d’eau prépayé
-                        intelligent basé sur la technologie LoRaWAN. Ce système intègre une application mobile
-                        permettant aux utilisateurs de gérer leur crédit de manière autonome et aux administrateurs de
-                        superviser l’ensemble des compteurs déployés. Le prototype vise à démontrer la faisabilité
-                        technique et économique d’une telle solution dans le contexte camerounais.</p>
                 </div>
 
                 <div class="feature-item animate-on-scroll" data-delay="200">
-                    <img src="images/yowyob.jpg" alt="Yowyob" class="feature-img" width="900" height="389" loading="lazy" decoding="async">
-                    <h3>Yowyob Feedback</h3>
-                    <p data-i18n="proj_yowyob" style="text-align: justify; font-size: 0.9em;">Plateforme de prise en
-                        compte des avis et impressions des stagiaires d’une entreprise (basé sur un prototype existant).
-                    </p>
-                    <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
-                        <a href="https://yowyob-feedback-frontend.vercel.app" target="_blank"
-                            style="color: var(--primary-color); font-weight: bold; text-decoration: none;"><i
-                                class="fas fa-external-link-alt"></i> Démo</a>
-                        <a href="https://github.com/ALEMDJOU/yowyob_feedback_frontend" target="_blank"
-                            style="color: var(--text-dark); font-weight: bold; text-decoration: none;"><i
-                                class="fab fa-github"></i> Front</a>
-                        <a href="https://github.com/Git-Tomson/YowYobFeedback_Backend" target="_blank"
-                            style="color: var(--text-dark); font-weight: bold; text-decoration: none;"><i
-                                class="fab fa-github"></i> Back</a>
+                    <img src="images/xccm2.jpg" alt="XCCM2" class="feature-img" width="900" height="410" loading="lazy" decoding="async">
+                    <h3>XCCM2</h3>
+                    <p data-i18n="proj_xccm2" style="text-align: left; font-size: 0.9em;">Application qui facilite la création, l'organisation et la recomposition de contenus pédagogiques à partir de fragments pré-segmentés appelés granules. Cette approche modulaire rend les contenus réutilisables, favorise le travail collaboratif et accélère la production de ressources pédagogiques numériques.</p>
+                    <p class="project-role" data-i18n="proj_xccm2_role"><strong>Mon rôle :</strong> développement du backend (API).</p>
+                    <div class="project-links">
+                        <a class="demo" href="https://xccm-2.vercel.app" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Démo</a>
+                        <a href="https://github.com/Zenbx/XCCM_2" target="_blank" rel="noopener"><i class="fab fa-github"></i> Front</a>
+                        <a href="https://github.com/Git-Tomson/XCCM2-API" target="_blank" rel="noopener"><i class="fab fa-github"></i> Back</a>
                     </div>
                 </div>
 
                 <div class="feature-item animate-on-scroll" data-delay="300">
-                    <img src="images/airsentinel.jpg" alt="AirSentinel" class="feature-img" width="258" height="561" loading="lazy" decoding="async">
-                    <h3>AirSentinel</h3>
-                    <p data-i18n="proj_airsentinel" style="text-align: justify; font-size: 0.9em;">AirSentinel représente une avancée majeure pour la santé publique au Cameroun. Grâce à l'intelligence artificielle, nous pouvons désormais anticiper les épisodes de pollution et protéger les populations les plus vulnérables.</p>
-                    <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
-                        <a href="https://github.com/ALEMDJOU/AirSentinel2" target="_blank"
-                            style="color: var(--text-dark); font-weight: bold; text-decoration: none;"><i
-                                class="fab fa-github"></i> GitHub</a>
+                    <div class="project-images-combined">
+                        <img src="images/waterpaid.jpg" alt="Application OPAID" width="500" height="978" loading="lazy" decoding="async">
+                        <img src="images/cartepcb.jpg" alt="Carte électronique OPAID" width="800" height="600" loading="lazy" decoding="async">
                     </div>
+                    <h3>OPAID</h3>
+                    <p data-i18n="proj_waterpaid" style="text-align: left; font-size: 0.9em;">Compteur d'eau prépayé intelligent basé sur la technologie LoRaWAN, accompagné d'une application mobile : les usagers gèrent leur crédit en autonomie et les administrateurs supervisent l'ensemble des compteurs. Le prototype démontre la faisabilité technique et économique de la solution au Cameroun. 1er prix aux concours AFENSPY et ASPY.</p>
                 </div>
 
             </div>
@@ -183,7 +172,7 @@
                         <i class="fas fa-trophy"></i>
                     </div>
                     <h3 data-i18n="award_1_title">2e Place – Hackathon IndabaX Cameroun 2026</h3>
-                    <p data-i18n="award_1_desc">Avec mon équipe de l'ISSEA (Mark Fankam, Sabine Bodehou et Firmin Peurbar Rimbar), j'ai décroché la 2e place du hackathon IndabaX Cameroun 2026 grâce à AirSentinel, un outil d'intelligence artificielle dédié à l'anticipation des épisodes de pollution atmosphérique.</p>
+                    <p data-i18n="award_1_desc">Au sein d'une équipe mixte ISSEA–ENSPY (Mark Fankam, Sabine Bodehou et Firmin Peurbar Rimbar), 2e place du hackathon IndabaX Cameroun 2026 avec AirSentinel, un outil d'IA qui anticipe les épisodes de pollution atmosphérique. J'y ai développé l'application web et mobile ainsi que l'API de prédiction.</p>
                 </div>
                 <div class="award-card animate-on-scroll" data-delay="100">
                     <img src="images/AI_Hackverse.jpg" alt="AI HackVerse" class="award-img" width="800" height="561" loading="lazy" decoding="async">
@@ -199,7 +188,7 @@
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <h3 data-i18n="award_3_title">3e Place – Hackathon Data4Change</h3>
-                    <p data-i18n="award_3_desc">Décroché la 3e place du hackathon organisé par le parti politique MPS, portant sur la conception d'un système intelligent de prédiction des prix du transport inter-urbain entre les villes de Yaoundé et Douala.</p>
+                    <p data-i18n="award_3_desc">3e place d'un hackathon consacré à la conception d'un système intelligent de prédiction des prix du transport interurbain entre Yaoundé et Douala.</p>
                 </div>
                 <div class="award-card animate-on-scroll" data-delay="300">
                     <img src="images/ProjetAFENSPY.jpeg" alt="Concours AFENSPY" class="award-img" width="800" height="600" loading="lazy" decoding="async">
@@ -223,7 +212,7 @@
                         <i class="fas fa-chart-pie"></i>
                     </div>
                     <h3 data-i18n="award_6_title">1er Prix – Statisticien de l'Année 2025 (Licence)</h3>
-                    <p data-i18n="award_6_desc">Désigné Premier Statisticien de l'Année 2025 (niveau Licence) lors du concours organisé par le groupe Statosphère de l'ISSEA.</p>
+                    <p data-i18n="award_6_desc">Désigné Premier Statisticien de l'Année 2025 (niveau Licence) lors du concours organisé par le groupe Statosphère de l'ISSEA, ouvert également aux étudiants de 3e année des filières scientifiques.</p>
                 </div>
             </div>
         </div>
@@ -237,7 +226,7 @@
             <!-- Stats counters -->
             <div class="stats-row">
                 <div class="stat-item animate-on-scroll" data-delay="0">
-                    <span class="stat-number" data-target="4" id="stat-projects">0</span>
+                    <span class="stat-number" data-target="8" data-plus id="stat-projects">0</span>
                     <span class="stat-label" data-i18n="stat_projects">Projets</span>
                 </div>
                 <div class="stat-item animate-on-scroll" data-delay="100">
@@ -245,7 +234,7 @@
                     <span class="stat-label" data-i18n="stat_exp">Expériences</span>
                 </div>
                 <div class="stat-item animate-on-scroll" data-delay="200">
-                    <span class="stat-number" data-target="3" id="stat-awards">0</span>
+                    <span class="stat-number" data-target="6" id="stat-awards">0</span>
                     <span class="stat-label" data-i18n="stat_awards">Distinctions</span>
                 </div>
                 <div class="stat-item animate-on-scroll" data-delay="300">
@@ -263,28 +252,28 @@
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">Python / NumPy / Pandas</span>
-                            <span class="skill-percent">90%</span>
+                            <span class="skill-percent" data-i18n="lvl_advanced">Avancé</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="90"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">Scikit-learn / Machine Learning</span>
-                            <span class="skill-percent">85%</span>
+                            <span class="skill-percent" data-i18n="lvl_advanced">Avancé</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="85"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">TensorFlow / PyTorch</span>
-                            <span class="skill-percent">75%</span>
+                            <span class="skill-percent" data-i18n="lvl_intermediate">Intermédiaire</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="75"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">Computer Vision / NLP</span>
-                            <span class="skill-percent">70%</span>
+                            <span class="skill-percent" data-i18n="lvl_intermediate">Intermédiaire</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="70"></div></div>
                     </div>
@@ -296,28 +285,28 @@
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">Next.js / Tailwind CSS</span>
-                            <span class="skill-percent">80%</span>
+                            <span class="skill-percent" data-i18n="lvl_advanced">Avancé</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="80"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">Node.js / Express</span>
-                            <span class="skill-percent">75%</span>
+                            <span class="skill-percent" data-i18n="lvl_intermediate">Intermédiaire</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="75"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">HTML / CSS / JavaScript</span>
-                            <span class="skill-percent">88%</span>
+                            <span class="skill-percent" data-i18n="lvl_advanced">Avancé</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="88"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">SQL / NoSQL</span>
-                            <span class="skill-percent">72%</span>
+                            <span class="skill-percent" data-i18n="lvl_intermediate">Intermédiaire</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="72"></div></div>
                     </div>
@@ -329,21 +318,21 @@
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">LoRaWAN / IoT</span>
-                            <span class="skill-percent">50%</span>
+                            <span class="skill-percent" data-i18n="lvl_basic">Bases</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="50"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">C / C++ / Embedded</span>
-                            <span class="skill-percent">50%</span>
+                            <span class="skill-percent" data-i18n="lvl_basic">Bases</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="50"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">Linux / Git / Docker</span>
-                            <span class="skill-percent">50%</span>
+                            <span class="skill-percent" data-i18n="lvl_basic">Bases</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="50"></div></div>
                     </div>
@@ -351,48 +340,27 @@
 
                 <!-- Soft skills / Langues -->
                 <div class="skills-category animate-on-scroll" data-delay="450">
-                    <div class="skills-category-title"><i class="fas fa-globe"></i> <span data-i18n="skills_soft">Langues & Soft Skills</span></div>
+                    <div class="skills-category-title"><i class="fas fa-globe"></i> <span data-i18n="skills_soft">Langues</span></div>
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">Français</span>
-                            <span class="skill-percent">100%</span>
+                            <span class="skill-percent" data-i18n="lvl_fluent">Courant</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="100"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">English</span>
-                            <span class="skill-percent">70%</span>
+                            <span class="skill-percent" data-i18n="lvl_intermediate">Intermédiaire</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="70"></div></div>
                     </div>
                     <div class="skill-item">
                         <div class="skill-header">
                             <span class="skill-name">Deutsch</span>
-                            <span class="skill-percent">20%</span>
+                            <span class="skill-percent" data-i18n="lvl_beginner">Débutant</span>
                         </div>
                         <div class="skill-bar-track"><div class="skill-bar-fill" data-width="20"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-header">
-                            <span class="skill-name">Leadership / Travail d’équipe</span>
-                            <span class="skill-percent">90%</span>
-                        </div>
-                        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="90"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-header">
-                            <span class="skill-name">Adaptabilité</span>
-                            <span class="skill-percent">80%</span>
-                        </div>
-                        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="80"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-header">
-                            <span class="skill-name">Assertivité</span>
-                            <span class="skill-percent">80%</span>
-                        </div>
-                        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="80"></div></div>
                     </div>
                 </div>
 
@@ -400,11 +368,12 @@
 
             <!-- Skill tags -->
             <div class="skills-tags">
-                <span class="skill-tag"><i class="fas fa-brain"></i> AI Engineer</span>
                 <span class="skill-tag"><i class="fab fa-python"></i> Python</span>
                 <span class="skill-tag"><i class="fas fa-robot"></i> TensorFlow</span>
                 <span class="skill-tag"><i class="fas fa-fire"></i> PyTorch</span>
                 <span class="skill-tag"><i class="fab fa-react"></i> Next.js</span>
+                <span class="skill-tag"><i class="fas fa-project-diagram"></i> LangGraph / LLM</span>
+                <span class="skill-tag"><i class="fas fa-bolt"></i> FastAPI</span>
                 <span class="skill-tag"><i class="fab fa-node-js"></i> Node.js</span>
                 <span class="skill-tag"><i class="fas fa-database"></i> SQL</span>
                 <span class="skill-tag"><i class="fab fa-docker"></i> Docker</span>
@@ -413,6 +382,9 @@
                 <span class="skill-tag"><i class="fas fa-eye"></i> Computer Vision</span>
                 <span class="skill-tag"><i class="fas fa-chart-line"></i> Data Science</span>
                 <span class="skill-tag"><i class="fas fa-microchip"></i> IoT</span>
+                <span class="skill-tag"><i class="fas fa-users"></i> <span data-i18n="soft_leadership">Leadership &amp; travail d’équipe</span></span>
+                <span class="skill-tag"><i class="fas fa-sync-alt"></i> <span data-i18n="soft_adapt">Adaptabilité</span></span>
+                <span class="skill-tag"><i class="fas fa-comments"></i> <span data-i18n="soft_assert">Assertivité</span></span>
             </div>
 
         </div>
@@ -429,8 +401,7 @@
                         <span class="exp-date" data-i18n="exp_chaning_date">Juillet - Août 2025</span>
                         <h3 data-i18n="exp_chaning">Stagiaire Data Science</h3>
                         <div class="exp-org" data-i18n="exp_chaning_org">Chaning FP, Yaoundé</div>
-                        <p class="exp-desc" data-i18n="exp_chaning_desc">Analyse de la répartition des salaires d’une
-                            entreprise par des méthodes de Machine Learning...</p>
+                        <p class="exp-desc" data-i18n="exp_chaning_desc">Analyse de la répartition des salaires d’une entreprise via clustering (Machine Learning), visualisation et rapport d’analyse.</p>
                     </div>
                 </div>
 
@@ -438,7 +409,7 @@
                 <div class="experience-card animate-on-scroll" data-delay="100">
                     <img src="images/inteligentsia.png" alt="Intelligentsia Logo" class="exp-logo" width="225" height="225" loading="lazy" decoding="async">
                     <div class="exp-details">
-                        <span class="exp-date" data-i18n="exp_intelligentsia_date">2023 - 2024</span>
+                        <span class="exp-date" data-i18n="exp_intelligentsia_date">Juin 2023 - Septembre 2024</span>
                         <h3 data-i18n="exp_intelligentsia">Professeur de Mathématiques & Physique</h3>
                         <div class="exp-org" data-i18n="exp_intelligentsia_org">Intelligentsia Corporation, Cameroun
                         </div>
@@ -452,7 +423,7 @@
 
     <section id="development" class="dev-section">
         <div class="container">
-            <h2 class="section-title-alt" data-i18n="dev_title">Sujets en cours de recherche</h2>
+            <h2 class="section-title-alt" data-i18n="dev_title">Axes de recherche et d'approfondissement</h2>
             <div class="feature-grid">
                 <!-- Deep Learning e-->
                 <div class="dev-item animate-on-scroll" data-delay="0">
@@ -515,7 +486,7 @@
 
     <section id="contact" class="cta-section" style="padding: 80px 0;">
         <div class="container">
-            <h2 class="pulse" data-i18n="contact_title">Prêt à collaborer ?</h2>
+            <h2 data-i18n="contact_title">Prêt à collaborer ?</h2>
             <p data-i18n="contact_desc" style="margin-bottom: 40px;">N'hésitez pas à me contacter pour toute opportunité
                 professionnelle.</p>
 
@@ -573,8 +544,8 @@
                         </div>
                         <button type="submit" class="btn btn-primary btn-large"
                             style="width: 100%; background: var(--background-dark); border: 2px solid white;"
-                            data-i18n="form_submit">
-                            Envoyer le message <i class="fas fa-paper-plane" style="margin-left: 10px;"></i>
+                            >
+                            <span data-i18n="form_submit">Envoyer le message</span> <i class="fas fa-paper-plane" style="margin-left: 10px;"></i>
                         </button>
                     </form>
                 </div>
@@ -585,7 +556,7 @@
     <footer class="footer">
         <div class="container">
             <div style="text-align: center; margin-bottom: 20px;">
-                <a href="index.html"><img src="images/logo.png" alt="Logo FAHJ" style="height: 100px; width: auto;" width="400" height="364" loading="lazy" decoding="async"></a>
+                <a href="index.html" class="monogram monogram-lg" aria-label="Henri Joel – Accueil">HJ</a>
             </div>
             <div class="footer-bottom" style="text-align:center;">
                 <p>&copy; 2026 Fofack Alemdjou Henri Joel. <span data-i18n="footer_rights">Tous droits réservés.</span>

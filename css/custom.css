@@ -82,15 +82,6 @@
     font-size: 1.2em;
 }
 
-.hero-section {
-    background: url('../images/fofack.webp') center top/cover no-repeat !important;
-    min-height: 70vh !important;
-    padding-top: 160px !important;
-    padding-bottom: 80px !important;
-    display: flex;
-    align-items: flex-start;
-}
-
 .contact-link {
     transition: transform 0.2s, background 0.2s !important;
 }
@@ -162,48 +153,22 @@
     color: var(--text-dark);
 }
 
-@keyframes sparkle {
-
-    0%,
-    100% {
-        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--primary-color);
-        opacity: 1;
-    }
-
-    50% {
-        text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px var(--primary-accent);
-        opacity: 0.8;
-    }
-}
-
 .sparkle-text {
     color: #ffffff !important;
-    animation: sparkle 2s infinite ease-in-out;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .hero-section {
-    background: url('../images/fofack.webp') center center/cover no-repeat !important;
+    background:
+        linear-gradient(rgba(0, 128, 255, 0.16) 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(90deg, rgba(0, 128, 255, 0.16) 1px, transparent 1px) 0 0 / 28px 28px,
+        radial-gradient(ellipse at 50% 35%, #0f2a52 0%, #08111e 70%) !important;
     min-height: 80vh !important;
     padding-top: 160px !important;
     padding-bottom: 80px !important;
     display: flex;
     align-items: flex-start;
     position: relative;
-}
-
-/* Dark overlay cinématique sur le hero */
-.hero-section::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        160deg,
-        rgba(0, 0, 0, 0.3) 0%,
-        rgba(0, 20, 60, 0.25) 50%,
-        rgba(0, 0, 0, 0.35) 100%
-    );
-    z-index: 1;
-    pointer-events: none;
 }
 
 .hero-section .container {
@@ -436,7 +401,7 @@
 }
 
 .dev-item:hover {
-    transform: translateY(-14px) scale(1.025);
+    transform: translateY(-6px);
     box-shadow: 0 35px 70px rgba(0, 128, 255, 0.28);
 }
 
@@ -628,14 +593,13 @@
     transition: transform 0.38s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Glass card background */
+/* Fond de carte au survol */
 .experience-card::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: 22px;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px);
+    background: #ffffff;
     border: 1px solid rgba(0, 128, 255, 0.08);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
     opacity: 0;
@@ -672,7 +636,7 @@
 }
 
 .experience-card:hover {
-    transform: translateX(10px);
+    transform: translateY(-4px);
 }
 
 .exp-logo {
@@ -1073,7 +1037,7 @@
 
 .stat-number {
     font-size: 3.5em;
-    font-weight: 900;
+    font-weight: 700;
     background: linear-gradient(135deg, #fff 0%, #70c5ff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -1354,7 +1318,7 @@
 }
 
 .award-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-6px);
     background: rgba(255, 255, 255, 0.06);
     border-color: rgba(0, 128, 255, 0.3);
     box-shadow: 0 20px 40px rgba(0, 128, 255, 0.15);
@@ -1467,4 +1431,166 @@
     .skills-section .section-title-alt {
         font-size: 1.8em;
     }
-}
+}
+
+/* ========================================
+   PROJETS – CATÉGORIES, RÔLES, VISUELS
+   ======================================== */
+
+.project-category-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.6em;
+    color: var(--text-dark);
+    margin: 10px 0 30px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(0, 128, 255, 0.2);
+}
+
+.project-category-title i {
+    color: var(--primary-color);
+}
+
+.feature-grid + .project-category-title {
+    margin-top: 70px;
+}
+
+.project-visual {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 20px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0c1b2e 0%, #0080ff 100%);
+    color: #ffffff;
+    font-size: 3.5em;
+}
+
+.project-role {
+    margin-top: 15px;
+    padding: 8px 12px;
+    font-size: 0.85em;
+    text-align: left;
+    background: #eef6ff;
+    border-left: 3px solid var(--primary-color);
+    border-radius: 4px;
+}
+
+.project-stack {
+    margin-top: 10px;
+    font-size: 0.8em;
+    color: #5a6b7d;
+}
+
+.project-links {
+    margin-top: 15px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.project-links a {
+    color: var(--text-dark);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.project-links a.demo {
+    color: var(--primary-color);
+}
+
+/* ========================================
+   MOTIF DE CARREAUX DISCRET
+   ======================================== */
+
+.features-section {
+    background-color: var(--background-light);
+    background-image:
+        linear-gradient(rgba(0, 128, 255, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 128, 255, 0.12) 1px, transparent 1px);
+    background-size: 28px 28px;
+}
+
+.experience-section {
+    background:
+        linear-gradient(rgba(0, 128, 255, 0.12) 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(90deg, rgba(0, 128, 255, 0.12) 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(180deg, #f6f9ff 0%, #edf2ff 100%);
+}
+
+.awards-section {
+    background:
+        linear-gradient(rgba(0, 128, 255, 0.16) 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(90deg, rgba(0, 128, 255, 0.16) 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.skills-section {
+    background:
+        linear-gradient(rgba(0, 128, 255, 0.16) 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(90deg, rgba(0, 128, 255, 0.16) 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(180deg, #0a0f1e 0%, #0d1830 60%, #0a0f1e 100%);
+}
+
+.dev-section {
+    background:
+        linear-gradient(rgba(0, 128, 255, 0.16) 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(90deg, rgba(0, 128, 255, 0.16) 1px, transparent 1px) 0 0 / 28px 28px,
+        linear-gradient(160deg, #08111e 0%, #0c1f38 50%, #08111e 100%);
+}
+
+/* ========================================
+   CARTES OPAQUES (PAS DE GLASSMORPHISM)
+   ======================================== */
+
+.award-card,
+.skills-category {
+    background: #111c33;
+    border: 1px solid rgba(0, 128, 255, 0.18);
+}
+
+.skills-category:hover {
+    background: #13203b;
+    border-color: rgba(0, 128, 255, 0.35);
+}
+
+.dev-item {
+    background: #0c1b2e;
+    border: 1px solid rgba(0, 128, 255, 0.18);
+}
+
+/* ========================================
+   OMBRES DE CARTES PLUS MARQUÉES
+   ======================================== */
+
+.feature-grid .feature-item {
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.14);
+    border: 1px solid rgba(0, 128, 255, 0.08);
+}
+
+.feature-grid .feature-item:hover {
+    box-shadow: 0 20px 44px rgba(15, 23, 42, 0.22);
+}
+
+.experience-card::before {
+    opacity: 1;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+}
+
+.experience-card:hover::before {
+    box-shadow: 0 20px 44px rgba(15, 23, 42, 0.2);
+}
+
+.award-card,
+.skills-category,
+.dev-item {
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45);
+}
+
+.award-card:hover,
+.dev-item:hover {
+    box-shadow: 0 22px 50px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 128, 255, 0.35);
+}
