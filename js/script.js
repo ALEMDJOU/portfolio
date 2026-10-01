@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initBackToTop();
     initScrollProgress();
     initThemeToggle();
+    initLangDropdown();
     initHeroGrid();
 
     // Initialisation différée
@@ -137,6 +138,42 @@ function initContactForm() {
 }
 
 // ========================================
+// MENU DES LANGUES (clic + clavier)
+// ========================================
+
+function initLangDropdown() {
+    const dropdown = document.querySelector('.lang-dropdown');
+    const btn = document.getElementById('current-lang');
+    if (!dropdown || !btn) return;
+
+    btn.setAttribute('aria-haspopup', 'true');
+    btn.setAttribute('aria-expanded', 'false');
+
+    const setOpen = (open) => {
+        dropdown.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', String(open));
+    };
+
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setOpen(!dropdown.classList.contains('open'));
+    });
+
+    // Fermer après le choix d'une langue
+    dropdown.querySelectorAll('.lang-content button').forEach(option => {
+        option.addEventListener('click', () => setOpen(false));
+    });
+
+    // Fermer en cliquant ailleurs ou avec Échap
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') setOpen(false);
+    });
+}
+
+// ========================================
 // MODE CLAIR / SOMBRE
 // ========================================
 
@@ -209,7 +246,7 @@ function initHeroGrid() {
         const r = name.getBoundingClientRect();
         const margin = w < 600 ? 2 : 4;
         // Rectangles de texte à ne jamais recouvrir (nom, accroche, sous-titre)
-        const texts = [name, ...hero.querySelectorAll('.hero-content h2, .hero-content p')].map(el => {
+        const texts = [name, ...hero.querySelectorAll('.hero-content h2, .hero-content p, .hero-actions .btn')].map(el => {
             const t = el.getBoundingClientRect();
             return { left: t.left - heroRect.left - 4, right: t.right - heroRect.left + 4, top: t.top - heroRect.top - 4, bottom: t.bottom - heroRect.top + 4 };
         });

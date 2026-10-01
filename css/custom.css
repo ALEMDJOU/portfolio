@@ -74,10 +74,6 @@
     border-radius: 5px;
 }
 
-.lang-dropdown:hover .lang-content {
-    display: block !important;
-}
-
 .flag {
     font-size: 1.2em;
 }

@@ -1,5 +1,6 @@
 const translations = {
     fr: {
+        hero_cta_projects: "Voir mes projets",
         page_title: "Portfolio - Fofack Alemdjou Henri Joel",
         projets_page_title: "Tous mes Projets - Fofack Alemdjou Henri Joel",
         profil_page_title: "Mon Profil - Fofack Alemdjou Henri Joel",
@@ -23,7 +24,7 @@ const translations = {
         proj_yowyob: "Plateforme permettant aux stagiaires d'une entreprise de partager leurs avis et impressions, construite à partir d'un prototype existant.",
         contact_title: "Prêt à collaborer ?",
         contact_desc: "N'hésitez pas à me contacter pour toute opportunité professionnelle.",
-        contact_btn: "Me Contacter",
+        contact_btn: "Me contacter",
         footer_rights: "Tous droits réservés.",
         contact_info_title: "Mes Coordonnées",
         form_name: "Nom Complet",
@@ -96,6 +97,7 @@ const translations = {
         soft_assert: "Assertivité"
     },
     en: {
+        hero_cta_projects: "View my projects",
         page_title: "Portfolio - Fofack Alemdjou Henri Joel",
         projets_page_title: "All my Projects - Fofack Alemdjou Henri Joel",
         profil_page_title: "My Profile - Fofack Alemdjou Henri Joel",
@@ -192,6 +194,7 @@ const translations = {
         soft_assert: "Assertiveness"
     },
     de: {
+        hero_cta_projects: "Meine Projekte ansehen",
         page_title: "Portfolio - Fofack Alemdjou Henri Joel",
         projets_page_title: "Alle meine Projekte - Fofack Alemdjou Henri Joel",
         profil_page_title: "Mein Profil - Fofack Alemdjou Henri Joel",
@@ -215,7 +218,7 @@ const translations = {
         proj_yowyob: "Plattform, auf der die Praktikanten eines Unternehmens ihr Feedback und ihre Eindrücke teilen, aufgebaut auf einem bestehenden Prototyp.",
         contact_title: "Bereit für eine Zusammenarbeit?",
         contact_desc: "Zögern Sie nicht, mich für berufliche Möglichkeiten zu kontaktieren.",
-        contact_btn: "Kontaktiere mich",
+        contact_btn: "Kontakt aufnehmen",
         footer_rights: "Alle Rechte vorbehalten.",
         contact_info_title: "Kontaktinfo",
         form_name: "Vollständiger Name",

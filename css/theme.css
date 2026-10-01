@@ -168,6 +168,33 @@ img {
     color: var(--t-text);
 }
 
+/* Menu des langues : collé au bouton, avec une zone tampon invisible
+   pour que la souris ne le referme pas en passant du bouton à la liste */
+.lang-content {
+    top: 100%;
+    margin-top: 6px;
+}
+
+.lang-content::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -10px;
+    height: 10px;
+}
+
+.lang-dropdown.open .lang-content {
+    display: block;
+}
+
+/* Ouverture au survol uniquement sur les appareils avec souris */
+@media (hover: hover) and (pointer: fine) {
+    .lang-dropdown:hover .lang-content {
+        display: block;
+    }
+}
+
 .lang-content button:hover {
     color: #ffffff;
 }
@@ -648,4 +675,116 @@ section {
         height: 36px;
         flex-basis: 36px;
     }
+}
+
+/* ==========================================================
+   FINITIONS
+   ========================================================== */
+
+/* Visuels de projets au même format (≈ 2,2:1) */
+.feature-grid .feature-item:nth-child(n) .feature-img {
+    height: auto;
+    aspect-ratio: 900 / 410;
+    object-fit: cover;
+    padding: 0;
+    border: 1px solid var(--t-border);
+}
+
+.project-images-combined {
+    height: auto;
+    aspect-ratio: 900 / 410;
+}
+
+.project-images-combined img {
+    height: 100%;
+    border: 1px solid var(--t-border);
+}
+
+/* Section Recherches : pictogrammes sur carreaux au lieu de photos de stock */
+.dev-visual {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.2em;
+    color: var(--accent);
+    background:
+        linear-gradient(var(--t-grid) 1px, transparent 1px) 0 0 / 20px 20px,
+        linear-gradient(90deg, var(--t-grid) 1px, transparent 1px) 0 0 / 20px 20px,
+        radial-gradient(circle at 50% 50%, var(--t-hero-glow) 0%, var(--t-surface-2) 70%);
+    transition: transform 0.3s ease;
+}
+
+.dev-item:hover .dev-visual {
+    transform: scale(1.06);
+}
+
+.dev-img-container {
+    height: 160px;
+}
+
+.dev-img-container::after {
+    display: none;
+}
+
+/* Boutons d'action du hero */
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 2em;
+}
+
+.hero-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 26px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+}
+
+.hero-actions .btn-secondary {
+    background: var(--t-surface);
+}
+
+@media (max-width: 480px) {
+    .hero-actions .btn {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+}
+
+/* Pied de page : liens utiles */
+.footer-social {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0 0 20px;
+}
+
+.footer-social a {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #cbd5e1;
+    font-size: 1.05em;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.footer-social a:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+}
+
+.footer-bottom p {
+    color: #94a3b8;
 }
