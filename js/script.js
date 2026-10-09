@@ -178,7 +178,7 @@ function initOnboarding() {
     function build() {
         overlay = document.createElement('div');
         overlay.className = 'tour-overlay';
-        overlay.addEventListener('click', (e) => { if (e.target === overlay) end(); });
+        // Un clic à côté de la carte ne ferme plus la visite : seuls « Passer », « Terminer » ou Échap la ferment
 
         ring = document.createElement('div');
         ring.className = 'tour-ring';
@@ -191,9 +191,13 @@ function initOnboarding() {
         card.setAttribute('aria-describedby', 'tour-text');
 
         document.body.append(overlay, ring, card);
+        document.body.classList.add('tour-active');
         document.addEventListener('keydown', onKey);
         window.addEventListener('resize', position);
         window.addEventListener('scroll', position, { passive: true });
+        // Recalcule le cadre quand le menu des langues s'ouvre ou se ferme
+        document.addEventListener('click', onPageInteract, true);
+        document.addEventListener('mouseover', onPageInteract, true);
 
         // Retraduire l'étape si la langue change pendant la visite
         langObserver = new MutationObserver(render);
@@ -241,24 +245,50 @@ function initOnboarding() {
         const vh = window.innerHeight;
         const margin = 14;
 
+        const setMode = (mode) => {
+            card.classList.toggle('centered', mode === 'centered');
+            card.classList.toggle('docked', mode === 'docked');
+            overlay.classList.toggle('dim', mode === 'centered');
+            // Seul l'accueil bloque la page ; ensuite le visiteur peut cliquer et défiler librement
+            overlay.classList.toggle('passive', mode !== 'centered');
+            card.setAttribute('aria-modal', String(mode === 'centered'));
+            if (mode !== 'anchored') {
+                ring.classList.remove('visible');
+                card.style.left = '';
+                card.style.top = '';
+            }
+        };
+
         // Étape sans cible (ou cible masquée, ex. bouton CV sur mobile) : carte centrée
         if (!isVisible(target)) {
-            ring.classList.remove('visible');
-            overlay.classList.add('dim');
-            card.classList.add('centered');
-            card.style.left = '';
-            card.style.top = '';
+            setMode('centered');
             return;
         }
 
-        overlay.classList.remove('dim');
-        card.classList.remove('centered');
-        const r = target.getBoundingClientRect();
+        // Cible sortie de l'écran (le visiteur a fait défiler la page) : la carte reste ancrée en bas
+        let r = target.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > vh) {
+            setMode('docked');
+            return;
+        }
+
+        // Menu des langues ouvert : le cadre englobe aussi la liste des langues
+        const menu = step.key === 'lang' ? target.querySelector('.lang-content') : null;
+        if (menu && getComputedStyle(menu).display !== 'none') {
+            const m = menu.getBoundingClientRect();
+            r = { left: Math.min(r.left, m.left), top: r.top, right: Math.max(r.right, m.right), bottom: Math.max(r.bottom, m.bottom) };
+            r.width = r.right - r.left;
+            r.height = r.bottom - r.top;
+        }
+
+        setMode('anchored');
         const pad = 8;
         ring.style.left = (r.left - pad) + 'px';
-        ring.style.top = (r.top - pad) + 'px';
+        // Ne pas faire déborder le cadre au-dessus de l'écran (cibles dans la barre de navigation)
+        const ringTop = Math.max(2, r.top - pad);
+        ring.style.top = ringTop + 'px';
         ring.style.width = (r.width + pad * 2) + 'px';
-        ring.style.height = (r.height + pad * 2) + 'px';
+        ring.style.height = (r.bottom + pad - ringTop) + 'px';
         ring.classList.add('visible');
 
         const cw = card.offsetWidth;
@@ -281,8 +311,8 @@ function initOnboarding() {
         if (e.key === 'Escape') end();
         else if (e.key === 'ArrowRight') index < steps.length - 1 ? go(index + 1) : end();
         else if (e.key === 'ArrowLeft' && index > 0) go(index - 1);
-        else if (e.key === 'Tab') {
-            // Garder le focus dans la carte
+        else if (e.key === 'Tab' && card.classList.contains('centered')) {
+            // Garder le focus dans la carte tant qu'elle est modale (écran d'accueil)
             const focusables = card.querySelectorAll('button');
             if (!focusables.length) return;
             const firstEl = focusables[0];
@@ -290,6 +320,11 @@ function initOnboarding() {
             if (e.shiftKey && document.activeElement === firstEl) { e.preventDefault(); lastEl.focus(); }
             else if (!e.shiftKey && document.activeElement === lastEl) { e.preventDefault(); firstEl.focus(); }
         }
+    }
+
+    function onPageInteract(e) {
+        // Après les gestionnaires de la page (ex. ouverture du menu des langues)
+        if (card && !card.contains(e.target)) setTimeout(position, 0);
     }
 
     function start() {
@@ -307,6 +342,9 @@ function initOnboarding() {
         document.removeEventListener('keydown', onKey);
         window.removeEventListener('resize', position);
         window.removeEventListener('scroll', position);
+        document.removeEventListener('click', onPageInteract, true);
+        document.removeEventListener('mouseover', onPageInteract, true);
+        document.body.classList.remove('tour-active');
         if (langObserver) langObserver.disconnect();
         [overlay, ring, card].forEach(el => el && el.remove());
         overlay = ring = card = null;

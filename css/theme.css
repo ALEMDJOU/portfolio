@@ -963,3 +963,35 @@ section {
 .tour-restart:hover {
     color: #ffffff;
 }
+
+/* Visite : la page reste utilisable après l'écran d'accueil */
+.tour-overlay.passive {
+    pointer-events: none;
+}
+
+/* Carte ancrée en bas quand la cible est hors de l'écran */
+.tour-card.docked {
+    left: auto;
+    top: auto;
+    right: 20px;
+    bottom: 20px;
+}
+
+@media (max-width: 576px) {
+    .tour-card.docked {
+        right: 14px;
+        left: 14px;
+        bottom: 14px;
+        width: auto;
+    }
+}
+
+/* La barre de navigation reste visible pendant la visite (elle contient plusieurs cibles) */
+body.tour-active .navbar {
+    transform: none !important;
+}
+
+/* Le bouton « retour en haut » recouvrirait la carte ancrée en bas : on le masque pendant la visite */
+body.tour-active #back-to-top {
+    display: none;
+}
