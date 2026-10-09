@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollProgress();
     initThemeToggle();
     initLangDropdown();
+    initOnboarding();
     initHeroGrid();
 
     // Initialisation différée
@@ -135,6 +136,189 @@ function initContactForm() {
             }
         });
     });
+}
+
+// ========================================
+// VISITE GUIDÉE (ONBOARDING)
+// ========================================
+
+function initOnboarding() {
+    const TOUR_KEY = 'portfolio_tour_done';
+    const restartBtn = document.getElementById('tour-restart');
+    if (!document.getElementById('hero-name')) return; // page d'accueil uniquement
+
+    const steps = [
+        { key: 'welcome', target: null },
+        { key: 'projects', target: '.hero-actions .btn-primary' },
+        { key: 'theme', target: '#theme-toggle' },
+        { key: 'lang', target: '.lang-dropdown' },
+        { key: 'cv', target: '.navbar .auth-buttons .btn' },
+        { key: 'contact', target: '.hero-actions .btn-secondary' }
+    ];
+
+    let index = 0;
+    let overlay = null;
+    let ring = null;
+    let card = null;
+    let lastFocus = null;
+    let langObserver = null;
+
+    const t = (key) => {
+        const lang = document.documentElement.lang || 'fr';
+        const dict = (typeof translations !== 'undefined' && (translations[lang] || translations.fr)) || {};
+        return dict[key] || '';
+    };
+
+    const isVisible = (el) => {
+        if (!el) return false;
+        const r = el.getBoundingClientRect();
+        return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden';
+    };
+
+    function build() {
+        overlay = document.createElement('div');
+        overlay.className = 'tour-overlay';
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) end(); });
+
+        ring = document.createElement('div');
+        ring.className = 'tour-ring';
+
+        card = document.createElement('div');
+        card.className = 'tour-card';
+        card.setAttribute('role', 'dialog');
+        card.setAttribute('aria-modal', 'true');
+        card.setAttribute('aria-labelledby', 'tour-title');
+        card.setAttribute('aria-describedby', 'tour-text');
+
+        document.body.append(overlay, ring, card);
+        document.addEventListener('keydown', onKey);
+        window.addEventListener('resize', position);
+        window.addEventListener('scroll', position, { passive: true });
+
+        // Retraduire l'étape si la langue change pendant la visite
+        langObserver = new MutationObserver(render);
+        langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+    }
+
+    function render() {
+        const step = steps[index];
+        const last = index === steps.length - 1;
+        const first = index === 0;
+        const counter = t('tour_step').replace('{n}', index + 1).replace('{total}', steps.length);
+
+        card.innerHTML = `
+            <p class="tour-counter">${first ? '' : counter}</p>
+            <h3 id="tour-title">${t('tour_' + step.key + '_title')}</h3>
+            <p id="tour-text">${t('tour_' + step.key + '_text')}</p>
+            <div class="tour-progress" aria-hidden="true">${steps.map((_, i) => `<span class="${i === index ? 'active' : ''}"></span>`).join('')}</div>
+            <div class="tour-actions">
+                <button type="button" class="tour-btn tour-skip" data-action="skip">${last ? '' : t('tour_skip')}</button>
+                <div class="tour-nav">
+                    ${first || last ? '' : `<button type="button" class="tour-btn" data-action="prev">${t('tour_prev')}</button>`}
+                    <button type="button" class="tour-btn tour-primary" data-action="next">${first ? t('tour_start') : last ? t('tour_done') : t('tour_next')}</button>
+                </div>
+            </div>`;
+        if (last) card.querySelector('.tour-skip').remove();
+
+        card.querySelectorAll('[data-action]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const action = btn.dataset.action;
+                if (action === 'next') last ? end() : go(index + 1);
+                else if (action === 'prev') go(index - 1);
+                else end();
+            });
+        });
+
+        position();
+        card.querySelector('.tour-primary').focus({ preventScroll: true });
+    }
+
+    function position() {
+        if (!card) return;
+        const step = steps[index];
+        const target = step.target ? document.querySelector(step.target) : null;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const margin = 14;
+
+        // Étape sans cible (ou cible masquée, ex. bouton CV sur mobile) : carte centrée
+        if (!isVisible(target)) {
+            ring.classList.remove('visible');
+            overlay.classList.add('dim');
+            card.classList.add('centered');
+            card.style.left = '';
+            card.style.top = '';
+            return;
+        }
+
+        overlay.classList.remove('dim');
+        card.classList.remove('centered');
+        const r = target.getBoundingClientRect();
+        const pad = 8;
+        ring.style.left = (r.left - pad) + 'px';
+        ring.style.top = (r.top - pad) + 'px';
+        ring.style.width = (r.width + pad * 2) + 'px';
+        ring.style.height = (r.height + pad * 2) + 'px';
+        ring.classList.add('visible');
+
+        const cw = card.offsetWidth;
+        const ch = card.offsetHeight;
+        let top = r.bottom + pad + margin;
+        if (top + ch > vh - margin) top = Math.max(margin, r.top - pad - margin - ch);
+        let left = r.left + r.width / 2 - cw / 2;
+        left = Math.min(Math.max(margin, left), vw - cw - margin);
+        card.style.left = left + 'px';
+        card.style.top = top + 'px';
+    }
+
+    function go(i) {
+        index = Math.max(0, Math.min(steps.length - 1, i));
+        render();
+    }
+
+    function onKey(e) {
+        if (!card) return;
+        if (e.key === 'Escape') end();
+        else if (e.key === 'ArrowRight') index < steps.length - 1 ? go(index + 1) : end();
+        else if (e.key === 'ArrowLeft' && index > 0) go(index - 1);
+        else if (e.key === 'Tab') {
+            // Garder le focus dans la carte
+            const focusables = card.querySelectorAll('button');
+            if (!focusables.length) return;
+            const firstEl = focusables[0];
+            const lastEl = focusables[focusables.length - 1];
+            if (e.shiftKey && document.activeElement === firstEl) { e.preventDefault(); lastEl.focus(); }
+            else if (!e.shiftKey && document.activeElement === lastEl) { e.preventDefault(); firstEl.focus(); }
+        }
+    }
+
+    function start() {
+        if (card) return;
+        lastFocus = document.activeElement;
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        index = 0;
+        build();
+        render();
+        requestAnimationFrame(() => overlay.classList.add('show'));
+    }
+
+    function end() {
+        try { localStorage.setItem(TOUR_KEY, '1'); } catch (e) { /* stockage indisponible */ }
+        document.removeEventListener('keydown', onKey);
+        window.removeEventListener('resize', position);
+        window.removeEventListener('scroll', position);
+        if (langObserver) langObserver.disconnect();
+        [overlay, ring, card].forEach(el => el && el.remove());
+        overlay = ring = card = null;
+        if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+    }
+
+    if (restartBtn) restartBtn.addEventListener('click', start);
+
+    // Première visite : lancer la visite après l'animation d'entrée du hero
+    let done = null;
+    try { done = localStorage.getItem(TOUR_KEY); } catch (e) { done = '1'; }
+    if (!done && !location.hash) setTimeout(start, 1400);
 }
 
 // ========================================

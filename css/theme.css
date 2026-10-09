@@ -788,3 +788,178 @@ section {
 .footer-bottom p {
     color: #94a3b8;
 }
+
+/* ==========================================================
+   VISITE GUIDÉE (ONBOARDING)
+   ========================================================== */
+
+.tour-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: transparent;
+    opacity: 0;
+    transition: opacity 0.25s ease, background 0.25s ease;
+}
+
+.tour-overlay.show {
+    opacity: 1;
+}
+
+.tour-overlay.dim {
+    background: rgba(8, 17, 30, 0.62);
+}
+
+/* Cadre de mise en lumière : l'ombre géante assombrit le reste de la page */
+.tour-ring {
+    position: fixed;
+    z-index: 2001;
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+    box-shadow: 0 0 0 9999px rgba(8, 17, 30, 0.62);
+    pointer-events: none;
+    opacity: 0;
+    transition: left 0.3s ease, top 0.3s ease, width 0.3s ease, height 0.3s ease, opacity 0.2s ease;
+}
+
+.tour-ring.visible {
+    opacity: 1;
+}
+
+.tour-card {
+    position: fixed;
+    z-index: 2002;
+    width: min(360px, calc(100vw - 28px));
+    padding: 20px 20px 16px;
+    background: var(--t-surface);
+    color: var(--t-text);
+    border: 1px solid var(--t-border);
+    border-radius: 14px;
+    box-shadow: var(--t-shadow-hover);
+    transition: left 0.3s ease, top 0.3s ease;
+}
+
+.tour-card.centered {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.tour-card h3 {
+    margin: 0 0 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    color: var(--t-heading);
+}
+
+.tour-card #tour-text {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.tour-counter {
+    min-height: 1em;
+    margin: 0 0 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--t-accent-text);
+}
+
+.tour-progress {
+    display: flex;
+    gap: 6px;
+    margin: 16px 0 14px;
+}
+
+.tour-progress span {
+    width: 16px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--t-track);
+    transition: width 0.25s ease, background 0.25s ease;
+}
+
+.tour-progress span.active {
+    width: 28px;
+    background: var(--accent);
+}
+
+.tour-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.tour-nav {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.tour-btn {
+    padding: 8px 14px;
+    border: 1px solid var(--t-border);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--t-heading);
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.tour-btn:hover {
+    background: var(--t-surface-2);
+}
+
+.tour-btn.tour-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+}
+
+.tour-btn.tour-primary:hover {
+    background: var(--accent-strong);
+}
+
+.tour-btn.tour-skip {
+    padding-left: 0;
+    border: none;
+    color: var(--t-muted);
+}
+
+.tour-btn.tour-skip:hover {
+    background: transparent;
+    color: var(--t-heading);
+}
+
+.tour-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Lien « Revoir la visite » dans le pied de page */
+.tour-restart-wrap {
+    margin: 0 0 12px;
+    text-align: center;
+}
+
+.tour-restart {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font: inherit;
+    font-size: 0.85rem;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
+.tour-restart:hover {
+    color: #ffffff;
+}
